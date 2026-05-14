@@ -52,7 +52,7 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: var(--font);
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.5;
   color: var(--text-primary);
   background: var(--bg-depth);
@@ -174,7 +174,11 @@ body {
 
 .hero__title {
   margin: 0 0 0.65rem;
-  font-size: clamp(1.35rem, 4.2vw, 1.85rem);
+  font-size: clamp(
+    calc(1.35rem + 10px),
+    calc(4.2vw + 10px),
+    calc(1.85rem + 10px)
+  );
   font-weight: 650;
   letter-spacing: -0.03em;
   line-height: 1.2;
@@ -183,7 +187,7 @@ body {
 
 .hero__lead {
   margin: 0;
-  font-size: clamp(0.9rem, 2.2vw, 1.02rem);
+  font-size: 1rem;
   font-weight: 450;
   line-height: 1.55;
   color: var(--text-secondary);
@@ -303,14 +307,14 @@ body {
 
 .dropzone__title {
   margin: 0 0 0.35rem;
-  font-size: 1.15rem;
+  font-size: calc(1.15rem + 10px);
   font-weight: 600;
   letter-spacing: -0.02em;
 }
 
 .dropzone__hint {
   margin: 0;
-  font-size: 0.88rem;
+  font-size: 1rem;
   color: var(--text-secondary);
 }
 
@@ -378,7 +382,7 @@ body {
 .dropzone-error {
   margin: 0.75rem 0 0;
   min-height: 1.25rem;
-  font-size: 0.82rem;
+  font-size: 1rem;
   font-weight: 500;
   color: #fca5a5;
 }
@@ -398,7 +402,7 @@ body {
   max-width: min(100%, 560px);
   margin-inline: auto;
   text-align: center;
-  font-size: 0.82rem;
+  font-size: 1rem;
   font-weight: 500;
   line-height: 1.4;
   color: var(--text-secondary);
@@ -1016,13 +1020,46 @@ body.doc-loaded .workspace {
   width: 100%;
 }
 
+/* ——— Section reveal (IntersectionObserver in section-reveal.js) ——— */
+.section-reveal {
+  opacity: 0;
+  transform: translate3d(0, 1.75rem, 0);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.section-reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+@media (scripting: none) {
+  .section-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 .landing-flow {
   margin: 0;
 }
 
 .landing-flow__title {
   margin: 0 0 clamp(1rem, 3vw, 1.35rem);
-  font-size: clamp(1.15rem, 2.8vw, 1.45rem);
+  font-size: clamp(
+    calc(1.15rem + 10px),
+    calc(2.8vw + 10px),
+    calc(1.45rem + 10px)
+  );
   font-weight: 650;
   letter-spacing: -0.02em;
   color: var(--text-primary);
@@ -1069,7 +1106,7 @@ body.doc-loaded .workspace {
 
 .landing-flow__step {
   margin: 0;
-  font-size: 1rem;
+  font-size: calc(1rem + 10px);
   font-weight: 650;
   letter-spacing: -0.015em;
   color: var(--text-primary);
@@ -1077,7 +1114,7 @@ body.doc-loaded .workspace {
 
 .landing-flow__tag {
   margin: 0;
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 500;
   color: var(--mint-400);
   line-height: 1.35;
@@ -1085,7 +1122,7 @@ body.doc-loaded .workspace {
 
 .landing-flow__desc {
   margin: 0.15rem 0 0;
-  font-size: 0.84rem;
+  font-size: 1rem;
   color: var(--text-secondary);
   line-height: 1.5;
 }
@@ -1097,7 +1134,11 @@ body.doc-loaded .workspace {
 
 .landing-compare__title {
   margin: 0 0 clamp(1rem, 3vw, 1.35rem);
-  font-size: clamp(1.15rem, 2.8vw, 1.45rem);
+  font-size: clamp(
+    calc(1.15rem + 10px),
+    calc(2.8vw + 10px),
+    calc(1.45rem + 10px)
+  );
   font-weight: 650;
   letter-spacing: -0.02em;
   color: var(--text-primary);
@@ -1129,7 +1170,7 @@ body.doc-loaded .workspace {
   border-collapse: separate;
   border-spacing: 0;
   font-family: var(--font);
-  font-size: 0.8125rem;
+  font-size: 1rem;
   line-height: 1.4;
 }
 
@@ -1236,7 +1277,7 @@ body.doc-loaded .workspace {
     padding-top: 0;
     padding-bottom: 0.55rem;
     margin-bottom: 0.35rem;
-    font-size: 0.875rem;
+    font-size: 1rem;
     border-bottom: 1px solid var(--border-strong);
   }
 
@@ -1248,7 +1289,7 @@ body.doc-loaded .workspace {
   .landing-compare__table tbody td::before {
     content: attr(data-label);
     font-weight: 600;
-    font-size: 0.72rem;
+    font-size: calc(0.72rem + 5px);
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--text-muted);
@@ -1269,7 +1310,7 @@ body.doc-loaded .workspace {
   }
 
   .landing-compare__table tbody td:not(.landing-compare__cell--winner) {
-    font-size: 0.8rem;
+    font-size: 1rem;
   }
 }
 
@@ -1281,7 +1322,11 @@ body.doc-loaded .workspace {
 
 .landing-pricing__heading {
   margin: 0 0 clamp(1.15rem, 3.5vw, 1.75rem);
-  font-size: clamp(1.15rem, 2.8vw, 1.45rem);
+  font-size: clamp(
+    calc(1.15rem + 10px),
+    calc(2.8vw + 10px),
+    calc(1.45rem + 10px)
+  );
   font-weight: 650;
   letter-spacing: -0.02em;
   color: var(--text-primary);
@@ -1359,7 +1404,11 @@ body.doc-loaded .workspace {
 
 .landing-pricing__plan-title {
   margin: 0 0 clamp(0.85rem, 2vw, 1.1rem);
-  font-size: clamp(1.05rem, 2.4vw, 1.25rem);
+  font-size: clamp(
+    calc(1.05rem + 10px),
+    calc(2.4vw + 10px),
+    calc(1.25rem + 10px)
+  );
   font-weight: 650;
   letter-spacing: -0.02em;
   color: var(--text-primary);
@@ -1380,7 +1429,11 @@ body.doc-loaded .workspace {
 }
 
 .landing-pricing__amount {
-  font-size: clamp(2.1rem, 6vw, 2.65rem);
+  font-size: clamp(
+    calc(2.1rem + 10px),
+    calc(6vw + 10px),
+    calc(2.65rem + 10px)
+  );
   font-weight: 700;
   letter-spacing: -0.03em;
   color: var(--text-primary);
@@ -1388,7 +1441,7 @@ body.doc-loaded .workspace {
 
 .landing-pricing__sub {
   margin: 0;
-  font-size: 0.88rem;
+  font-size: 1rem;
   font-weight: 500;
   color: var(--text-secondary);
   max-width: 22ch;
@@ -1413,7 +1466,7 @@ body.doc-loaded .workspace {
   display: flex;
   align-items: flex-start;
   gap: 0.65rem;
-  font-size: 0.86rem;
+  font-size: 1rem;
   line-height: 1.45;
   color: var(--text-secondary);
 }
@@ -1457,7 +1510,7 @@ a.landing-pricing__cta--outline:visited {
   width: 100%;
   max-width: 19rem;
   min-height: 2.65rem;
-  font-size: 0.92rem;
+  font-size: 1rem;
 }
 
 .toolbar__btn.landing-pricing__cta--outline {
@@ -1488,7 +1541,11 @@ a.landing-pricing__cta--outline:visited {
 
 .landing-faq__title {
   margin: 0 0 clamp(0.85rem, 2.5vw, 1.2rem);
-  font-size: clamp(1.05rem, 2.6vw, 1.3rem);
+  font-size: clamp(
+    calc(1.05rem + 10px),
+    calc(2.6vw + 10px),
+    calc(1.3rem + 10px)
+  );
   font-weight: 650;
   letter-spacing: -0.02em;
   color: var(--text-primary);
@@ -1521,7 +1578,7 @@ a.landing-pricing__cta--outline:visited {
   justify-content: space-between;
   gap: 1rem;
   padding: 0.82rem 0.15rem 0.82rem 0.25rem;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
   line-height: 1.4;
@@ -1598,7 +1655,7 @@ a.landing-pricing__cta--outline:visited {
 
 .landing-faq__answer p {
   margin: 0;
-  font-size: 0.83rem;
+  font-size: 1rem;
   line-height: 1.55;
   color: var(--text-secondary);
 }
@@ -1630,7 +1687,7 @@ a.landing-pricing__cta--outline:visited {
   padding: 0;
   border: none;
   background: none;
-  font-size: 0.76rem;
+  font-size: 13px;
   line-height: 1.6;
   text-align: center;
   color: var(--text-muted);
@@ -1650,7 +1707,7 @@ a.landing-pricing__cta--outline:visited {
 
 .app-footer__line {
   margin: 0;
-  font-size: 0.73rem;
+  font-size: 13px;
   line-height: 1.45;
   color: var(--text-muted);
 }
@@ -1661,12 +1718,13 @@ a.landing-pricing__cta--outline:visited {
 }
 
 .app-footer__product-desc {
-  font-size: 0.68rem;
+  font-size: 13px;
   font-weight: 450;
   color: var(--text-muted);
 }
 
 .app-footer__link {
+  font-size: 13px;
   color: var(--text-secondary);
   text-decoration: none;
   border-bottom: 1px solid transparent;
@@ -1704,7 +1762,7 @@ a.landing-pricing__cta--outline:visited {
 }
 
 .app-footer__legal-link {
-  font-size: 0.72rem;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text-muted);
   text-decoration: none;
