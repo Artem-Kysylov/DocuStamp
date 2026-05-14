@@ -53,21 +53,31 @@
         </filter>
       </defs>
     </svg>
-    <div class="app-shell">
+    <div class="app-shell" id="top">
       <header class="app-header glass" role="banner">
-        <div class="brand">
+        <a
+          class="brand brand--link"
+          href="#intro-section"
+          aria-label="DocStamp — back to upload"
+        >
           <span class="brand__mark" aria-hidden="true"></span>
-          <div class="brand__text">
-            <span class="brand__name">DocStamp</span>
-            <span class="brand__tagline">Syntax Labs</span>
-          </div>
-        </div>
-        <p class="app-header__pitch">
-          Stamp PDFs in seconds — local-first, zero uploads.
-        </p>
+          <span class="brand__name">DocStamp</span>
+        </a>
+        <nav class="app-header__nav" aria-label="Site">
+          <a class="app-header__link" href="#pricing">Pricing</a>
+        </nav>
       </header>
 
       <main class="app-main" id="app-main">
+        <section class="hero" aria-labelledby="hero-heading">
+          <h1 id="hero-heading" class="hero__title">
+            Stop opening Acrobat for one simple task.
+          </h1>
+          <p class="hero__lead">
+            Drag a PDF. Place your stamp. Export instantly. 100% locally in your
+            browser.
+          </p>
+        </section>
         <section
           class="dropzone-section"
           id="intro-section"
@@ -94,6 +104,10 @@
               </p>
             </div>
           </div>
+          <p class="dropzone-trust">
+            <span class="dropzone-trust__icon" aria-hidden="true">🔒</span>
+            100% Local Processing. Your files never leave your browser.
+          </p>
           <p id="dropzone-error" class="dropzone-error" role="status" hidden></p>
         </section>
 
@@ -195,8 +209,370 @@
         </section>
       </main>
 
+      <div class="landing-below-tool">
+        <section class="landing-flow" aria-labelledby="landing-flow-heading">
+          <h2 id="landing-flow-heading" class="landing-flow__title">
+            The 10-second flow
+          </h2>
+          <div class="landing-flow__grid">
+            <article class="landing-flow__card glass">
+              <div class="landing-flow__icon" aria-hidden="true">
+                <svg
+                  class="landing-flow__svg"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+              </div>
+              <h3 class="landing-flow__step">Drop</h3>
+              <p class="landing-flow__tag">No uploads</p>
+              <p class="landing-flow__desc">
+                Drag in a PDF or choose a file — processing stays in this tab
+                only.
+              </p>
+            </article>
+            <article class="landing-flow__card glass">
+              <div class="landing-flow__icon" aria-hidden="true">
+                <svg
+                  class="landing-flow__svg"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="22" y1="12" x2="18" y2="12" />
+                  <line x1="6" y1="12" x2="2" y2="12" />
+                  <line x1="12" y1="6" x2="12" y2="2" />
+                  <line x1="12" y1="22" x2="12" y2="18" />
+                </svg>
+              </div>
+              <h3 class="landing-flow__step">Place</h3>
+              <p class="landing-flow__tag">Instant signature rendering</p>
+              <p class="landing-flow__desc">
+                Position your signature on the page preview and tune size or
+                placement before you export.
+              </p>
+            </article>
+            <article class="landing-flow__card glass">
+              <div class="landing-flow__icon" aria-hidden="true">
+                <svg
+                  class="landing-flow__svg"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+              </div>
+              <h3 class="landing-flow__step">Export</h3>
+              <p class="landing-flow__tag">Lightning fast</p>
+              <p class="landing-flow__desc">
+                Download a signed PDF in moments — no queue, no cloud round
+                trip.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section
+          class="landing-compare"
+          aria-labelledby="landing-compare-heading"
+        >
+          <h2 id="landing-compare-heading" class="landing-compare__title">
+            DocStamp vs. Adobe Acrobat
+          </h2>
+          <div class="landing-compare__shell glass">
+            <div
+              class="landing-compare__scroll"
+              role="region"
+              aria-label="Comparison of DocStamp and Adobe Acrobat"
+              tabindex="0"
+            >
+              <table
+                class="landing-compare__table"
+                aria-labelledby="landing-compare-heading"
+              >
+                <thead>
+                  <tr>
+                    <th scope="col" class="landing-compare__th-feature">
+                      Feature
+                    </th>
+                    <th scope="col" class="landing-compare__th-adobe">
+                      Adobe Acrobat
+                    </th>
+                    <th
+                      scope="col"
+                      class="landing-compare__th-docstamp landing-compare__col-winner"
+                    >
+                      DocStamp
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row" class="landing-compare__feature">
+                      Startup Speed
+                    </th>
+                    <td data-label="Adobe Acrobat">15-30s</td>
+                    <td
+                      class="landing-compare__cell--winner"
+                      data-label="DocStamp"
+                    >
+                      &lt; 1s (Instant)
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="landing-compare__feature">
+                      Price
+                    </th>
+                    <td data-label="Adobe Acrobat">$20/mo Subscription</td>
+                    <td
+                      class="landing-compare__cell--winner"
+                      data-label="DocStamp"
+                    >
+                      $12 Lifetime
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="landing-compare__feature">
+                      Privacy
+                    </th>
+                    <td data-label="Adobe Acrobat">Cloud Upload</td>
+                    <td
+                      class="landing-compare__cell--winner"
+                      data-label="DocStamp"
+                    >
+                      100% Local (Private)
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="landing-compare__feature">
+                      User Experience
+                    </th>
+                    <td data-label="Adobe Acrobat">Bloated &amp; Complex</td>
+                    <td
+                      class="landing-compare__cell--winner"
+                      data-label="DocStamp"
+                    >
+                      10-Second Flow
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="landing-pricing"
+          id="pricing"
+          aria-labelledby="landing-pricing-heading"
+        >
+          <h2 id="landing-pricing-heading" class="landing-pricing__heading">
+            Simple, transparent pricing
+          </h2>
+          <div class="landing-pricing__grid">
+            <article
+              class="landing-pricing__plan landing-pricing__plan--free"
+              aria-label="Free plan"
+            >
+              <h3 class="landing-pricing__plan-title">Free</h3>
+              <div class="landing-pricing__price-block">
+                <p class="landing-pricing__price">
+                  <span class="landing-pricing__amount" aria-label="0 dollars"
+                    >$0</span
+                  >
+                </p>
+              </div>
+              <ul
+                class="landing-pricing__features landing-pricing__features--muted"
+                role="list"
+              >
+                <li class="landing-pricing__feature">
+                  <span class="landing-pricing__check" aria-hidden="true"
+                    >✓</span
+                  >
+                  <span>3 exports per day</span>
+                </li>
+                <li class="landing-pricing__feature">
+                  <span class="landing-pricing__check" aria-hidden="true"
+                    >✓</span
+                  >
+                  <span>Basic stamp placement</span>
+                </li>
+                <li class="landing-pricing__feature">
+                  <span class="landing-pricing__check" aria-hidden="true"
+                    >✓</span
+                  >
+                  <span>Local processing</span>
+                </li>
+              </ul>
+              <a
+                href="#intro-section"
+                class="toolbar__btn landing-pricing__cta landing-pricing__cta--outline"
+              >
+                Start for free
+              </a>
+            </article>
+            <div class="landing-pricing__premium-wrap">
+              <div class="landing-pricing__glow" aria-hidden="true"></div>
+              <article
+                class="landing-pricing__plan landing-pricing__plan--lifetime glass"
+                aria-label="Lifetime plan"
+              >
+                <h3 class="landing-pricing__plan-title">Lifetime Access</h3>
+                <div class="landing-pricing__price-block">
+                  <p class="landing-pricing__price">
+                    <span class="landing-pricing__amount" aria-label="12 dollars"
+                      >$12</span
+                    >
+                  </p>
+                  <p class="landing-pricing__sub">One-time payment</p>
+                </div>
+                <ul class="landing-pricing__features" role="list">
+                  <li class="landing-pricing__feature">
+                    <span class="landing-pricing__check" aria-hidden="true"
+                      >✓</span
+                    >
+                    <span>Unlimited PDF exports</span>
+                  </li>
+                  <li class="landing-pricing__feature">
+                    <span class="landing-pricing__check" aria-hidden="true"
+                      >✓</span
+                    >
+                    <span>Multi-page sync (Apply to all)</span>
+                  </li>
+                  <li class="landing-pricing__feature">
+                    <span class="landing-pricing__check" aria-hidden="true"
+                      >✓</span
+                    >
+                    <span>100% Local privacy</span>
+                  </li>
+                  <li class="landing-pricing__feature">
+                    <span class="landing-pricing__check" aria-hidden="true"
+                      >✓</span
+                    >
+                    <span>No subscriptions, ever.</span>
+                  </li>
+                </ul>
+                <a
+                  href="#intro-section"
+                  class="toolbar__btn toolbar__btn--primary landing-pricing__cta landing-pricing__cta--premium"
+                >
+                  Get Lifetime Access
+                </a>
+              </article>
+            </div>
+          </div>
+        </section>
+        <section class="landing-faq" aria-labelledby="landing-faq-heading">
+          <h2 id="landing-faq-heading" class="landing-faq__title">
+            Frequently asked questions
+          </h2>
+          <div class="landing-faq__panel glass">
+            <details class="landing-faq__item">
+              <summary class="landing-faq__summary">
+                <span class="landing-faq__question-text">
+                  Is it safe to stamp my documents here?
+                </span>
+                <span class="landing-faq__toggle-icon" aria-hidden="true"></span>
+              </summary>
+              <div class="landing-faq__body">
+                <div class="landing-faq__answer">
+                  <p>
+                    Yes. DocStamp is 100% local-first. Your PDFs never leave your
+                    browser and are never uploaded to any server.
+                  </p>
+                </div>
+              </div>
+            </details>
+            <details class="landing-faq__item">
+              <summary class="landing-faq__summary">
+                <span class="landing-faq__question-text">
+                  Do I need an account to sign a PDF?
+                </span>
+                <span class="landing-faq__toggle-icon" aria-hidden="true"></span>
+              </summary>
+              <div class="landing-faq__body">
+                <div class="landing-faq__answer">
+                  <p>
+                    No. You can use the tool instantly. We only offer accounts
+                    for Pro users to sync their signatures.
+                  </p>
+                </div>
+              </div>
+            </details>
+            <details class="landing-faq__item">
+              <summary class="landing-faq__summary">
+                <span class="landing-faq__question-text">
+                  How is this better than Adobe Acrobat?
+                </span>
+                <span class="landing-faq__toggle-icon" aria-hidden="true"></span>
+              </summary>
+              <div class="landing-faq__body">
+                <div class="landing-faq__answer">
+                  <p>
+                    DocStamp starts in under 1 second, costs $12 for life, and
+                    doesn&apos;t require a subscription for simple tasks.
+                  </p>
+                </div>
+              </div>
+            </details>
+          </div>
+        </section>
+      </div>
+
       <footer class="app-footer">
-        <p>100% client-side. No server uploads.</p>
+        <p class="app-footer__founder">
+          Built with 🖤 by Artem at Syntax Labs. No corporate trackers, no
+          bloat. Just pure Vanilla JS to save your time.
+        </p>
+        <div
+          class="app-footer__block app-footer__block--product"
+          role="group"
+          aria-label="Product link and copyright"
+        >
+          <p class="app-footer__line app-footer__line--tablexport">
+            <a
+              class="app-footer__link app-footer__link--mint"
+              href="https://www.tablexport.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >TableXport</a
+            ><span class="app-footer__product-desc">
+              — AI markdown tables for Google Sheets</span
+            >
+          </p>
+          <p class="app-footer__line app-footer__copyright">Copyright © 2026.</p>
+        </div>
+        <nav class="app-footer__legal" aria-label="Legal and contact">
+          <a class="app-footer__legal-link" href="#">Terms of Service</a>
+          <a class="app-footer__legal-link" href="#">Privacy Policy</a>
+          <a class="app-footer__legal-link" href="#">Refund Policy</a>
+          <a
+            class="app-footer__legal-link"
+            href="mailto:hello@syntax.tools"
+            >Contact</a
+          >
+        </nav>
       </footer>
     </div>
 
@@ -263,6 +639,44 @@
 
     <div id="doc-toast" class="doc-toast" role="status" aria-live="polite" hidden>
     </div>
+
+    <p class="local-processing-badge" aria-label="Local processing in your browser.">
+      <span class="local-processing-badge__icon" aria-hidden="true">🔒</span>
+      <span aria-hidden="true">Local Processing</span>
+    </p>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is it safe to stamp my documents here?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. DocStamp is 100% local-first. Your PDFs never leave your browser and are never uploaded to any server."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do I need an account to sign a PDF?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. You can use the tool instantly. We only offer accounts for Pro users to sync their signatures."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How is this better than Adobe Acrobat?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "DocStamp starts in under 1 second, costs $12 for life, and doesn't require a subscription for simple tasks."
+            }
+          }
+        ]
+      }
+    </script>
 
     <script
       src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"
