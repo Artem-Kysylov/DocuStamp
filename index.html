@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="DocStamp — stamp and sign PDFs locally in seconds."
+    />
+    <title>DocStamp — Local PDF stamping</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <svg
+      class="svg-filters"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <defs>
+        <filter
+          id="ink-bleed"
+          x="-55%"
+          y="-55%"
+          width="210%"
+          height="210%"
+          color-interpolation-filters="sRGB"
+        >
+          <feGaussianBlur
+            in="SourceGraphic"
+            stdDeviation="0.95"
+            result="blur"
+          />
+          <feColorMatrix
+            in="blur"
+            type="matrix"
+            values="1 0 0 0 0
+                    0 1 0 0 0
+                    0 0 1 0 0
+                    0 0 0 0.78 0"
+            result="soft"
+          />
+          <feMerge>
+            <feMergeNode in="soft" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+    </svg>
+    <div class="app-shell">
+      <header class="app-header glass" role="banner">
+        <div class="brand">
+          <span class="brand__mark" aria-hidden="true"></span>
+          <div class="brand__text">
+            <span class="brand__name">DocStamp</span>
+            <span class="brand__tagline">Syntax Labs</span>
+          </div>
+        </div>
+        <p class="app-header__pitch">
+          Stamp PDFs in seconds — local-first, zero uploads.
+        </p>
+      </header>
+
+      <main class="app-main" id="app-main">
+        <section
+          class="dropzone-section"
+          id="intro-section"
+          aria-label="Upload a PDF"
+        >
+          <div
+            id="dropzone"
+            class="dropzone"
+            role="button"
+            tabindex="0"
+            aria-describedby="dropzone-hint"
+          >
+            <input
+              id="file-input"
+              class="dropzone__input"
+              type="file"
+              accept="application/pdf,.pdf"
+              aria-label="Choose PDF file"
+            />
+            <div class="dropzone__content">
+              <p class="dropzone__title">Drop your PDF here</p>
+              <p id="dropzone-hint" class="dropzone__hint">
+                or click to browse — stays on your device
+              </p>
+            </div>
+          </div>
+          <p id="dropzone-error" class="dropzone-error" role="status" hidden></p>
+        </section>
+
+        <section
+          class="workspace glass"
+          id="workspace"
+          aria-label="PDF preview and export"
+          hidden
+        >
+          <div class="toolbar" role="toolbar" aria-label="Document actions">
+            <span class="toolbar__label">Document</span>
+            <span id="doc-name" class="toolbar__filename">—</span>
+            <button
+              type="button"
+              id="btn-replace-document"
+              class="toolbar__btn toolbar__btn--replace"
+              aria-label="Replace PDF"
+            >
+              Replace
+            </button>
+            <span class="toolbar__spacer" aria-hidden="true"></span>
+            <button
+              type="button"
+              id="btn-draw-signature"
+              class="toolbar__btn"
+              aria-expanded="false"
+              aria-controls="signature-modal"
+            >
+              Draw signature
+            </button>
+            <button
+              id="btn-download"
+              type="button"
+              class="toolbar__btn toolbar__btn--primary"
+              disabled
+            >
+              Download
+            </button>
+          </div>
+          <p id="workspace-status" class="workspace-status" role="status" hidden></p>
+
+          <div class="preview" id="preview">
+            <div class="preview__stage">
+              <div class="preview__canvas-wrap" id="canvas-wrap">
+                <div class="preview__page-frame">
+                  <canvas
+                    id="pdf-canvas"
+                    class="preview__canvas"
+                    aria-label="PDF page preview"
+                  ></canvas>
+                  <div
+                    id="stamp-overlay"
+                    class="preview__stamp-layer"
+                    aria-hidden="true"
+                  ></div>
+                </div>
+              </div>
+              <div
+                id="pdf-pager"
+                class="pdf-pager"
+                role="navigation"
+                aria-label="PDF pages"
+                hidden
+              >
+                <button
+                  type="button"
+                  id="pdf-pager-prev"
+                  class="pdf-pager__btn"
+                  aria-label="Previous page"
+                >
+                  ‹
+                </button>
+                <span id="pdf-pager-label" class="pdf-pager__label"
+                  >Page 1 / 1</span
+                >
+                <button
+                  type="button"
+                  id="stamp-sync-toggle"
+                  class="pdf-pager__sync"
+                  hidden
+                  role="switch"
+                  aria-checked="false"
+                  aria-label="Apply to all slides"
+                  title="Apply signature placement to every page"
+                >
+                  <span class="pdf-pager__sync-text">Apply to all pages</span>
+                </button>
+                <button
+                  type="button"
+                  id="pdf-pager-next"
+                  class="pdf-pager__btn"
+                  aria-label="Next page"
+                >
+                  ›
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="app-footer">
+        <p>100% client-side. No server uploads.</p>
+      </footer>
+    </div>
+
+    <div
+      id="signature-modal"
+      class="signature-modal"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="signature-modal-title"
+    >
+      <div class="signature-modal__panel glass">
+        <button
+          type="button"
+          id="signature-modal-close"
+          class="signature-modal__close"
+          aria-label="Close"
+        >
+          ×
+        </button>
+        <h2 id="signature-modal-title" class="signature-modal__title">
+          Draw your signature
+        </h2>
+        <p class="signature-modal__hint">
+          Draw in white on this pad — the saved stamp and PDF use the same deep
+          ink blue as the default “Signed”.
+        </p>
+        <canvas
+          id="signature-pad"
+          class="signature-modal__pad"
+          width="320"
+          height="160"
+          tabindex="0"
+          aria-label="Signature drawing pad"
+        ></canvas>
+        <div class="signature-modal__actions">
+          <button type="button" id="signature-modal-clear" class="toolbar__btn">
+            Clear
+          </button>
+          <button type="button" id="signature-modal-cancel" class="toolbar__btn">
+            Cancel
+          </button>
+          <button
+            type="button"
+            id="signature-modal-apply"
+            class="toolbar__btn toolbar__btn--primary"
+          >
+            Use signature
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="global-drop-overlay"
+      class="global-drop-overlay"
+      hidden
+      aria-hidden="true"
+    >
+      <div class="global-drop-overlay__panel glass">
+        <p class="global-drop-overlay__text">Drop to replace document</p>
+      </div>
+    </div>
+
+    <div id="doc-toast" class="doc-toast" role="status" aria-live="polite" hidden>
+    </div>
+
+    <script
+      src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" src="./js/main.js"></script>
+  </body>
+</html>

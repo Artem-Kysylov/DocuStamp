@@ -1,0 +1,35 @@
+# DOCSTAMP - PROJECT RULES & AI CONSTRAINTS
+**Context:** DocStamp is a premium micro-SaaS utility by "Syntax Labs". It allows users to sign and stamp PDFs in 10 seconds locally in the browser. 
+
+## 🚫 1. THE CORE ENGINE IS FROZEN (DO NOT TOUCH)
+- The PDF processing engine, Drag-and-Drop logic, multi-page synchronization, and export functionalities are **FINISHED**.
+- **DO NOT** modify, refactor, or suggest changes to `app.js` unless explicitly instructed by the user. 
+- **DO NOT** touch the HTML structure of the `#workspace` or `#dropzone` unless instructed.
+- Your primary task is extending the landing page, UI components, and SEO sections *below* the main tool.
+
+## 🛠 2. STRICT VANILLA STACK
+- **Allowed:** 100% Vanilla HTML5, CSS3 (with CSS Variables), and Vanilla JavaScript (ES6+).
+- **Banned:** React, Vue, Tailwind CSS, Bootstrap, jQuery, Webpack, Vite, Node.js backends.
+- Keep dependencies to absolute zero (except `pdf-lib` and `supabase` via CDN).
+
+## 🎨 3. DESIGN SYSTEM (SYNTAX LABS STYLE)
+- **Theme:** Deep Dark Mode (Obsidian). Background is `#0B0E14` or similar graphite tones. Do not use pure black (`#000000`).
+- **Typography:** 'Inter' font. Clean, sans-serif, professional.
+- **Accents:** "Supabase Mint" (`#10b981` to `#34d399`) and Pure White. 
+- **UI Elements:** Use Glassmorphism (subtle `backdrop-filter: blur(10px)`, slight transparency `rgba(22, 27, 34, 0.8)`, and 1px subtle borders `rgba(255, 255, 255, 0.08)`).
+- **Vibe:** Premium, native macOS application, B2B, minimalist, frictionless. NO playful animations, NO heavy shadows.
+
+## 🧱 4. CSS REUSABILITY
+- Reuse existing CSS variables from `:root`.
+- Do not create redundant classes. If a button looks like `.btn-primary`, reuse the class.
+- Use CSS Grid and Flexbox for layouts. Avoid absolute positioning unless necessary for tooltips/overlays.
+
+## 📄 5. LANDING PAGE ARCHITECTURE
+- The main PDF tool MUST remain at the very top of the page (Hero section).
+- All marketing, comparison tables, pricing, and SEO content must be placed *below* the tool.
+- The user must be able to use the tool immediately upon loading the page without scrolling.
+
+## 🤖 6. AI BEHAVIORAL RULES
+- **No massive code dumps:** Generate code section by section.
+- **Do not hallucinate features:** Stick exactly to the prompt.
+- **Check before deleting:** Never remove existing CSS classes or HTML IDs, as they might be tied to the locked `app.js` logic.
