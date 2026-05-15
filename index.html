@@ -3,11 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DocStamp | Sign PDFs locally in 10 seconds</title>
     <meta
       name="description"
-      content="DocStamp — stamp and sign PDFs locally in seconds."
+      content="The fastest, private way to add stamps and signatures to your PDFs. 100% local processing. Built by Syntax Labs."
     />
-    <title>DocStamp — Local PDF stamping</title>
+    <meta property="og:title" content="DocStamp | Fast & Private PDF Signing" />
+    <meta
+      property="og:description"
+      content="Instant local signature rendering. Your files never leave your browser."
+    />
+    <meta property="og:image" content="./og-image.jpg" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -15,6 +23,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
   </head>
   <body>
     <svg
@@ -60,7 +69,27 @@
           href="#intro-section"
           aria-label="DocStamp — back to upload"
         >
-          <span class="brand__mark" aria-hidden="true"></span>
+          <span class="brand__mark" aria-hidden="true">
+            <svg
+              class="brand__mark-svg"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 32 32"
+              fill="none"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <rect
+                x="4"
+                y="4"
+                width="24"
+                height="24"
+                rx="6"
+                stroke="currentColor"
+                stroke-width="1.75"
+              />
+              <rect x="11" y="11" width="10" height="10" rx="2.5" fill="currentColor" />
+            </svg>
+          </span>
           <span class="brand__name">DocStamp</span>
         </a>
         <nav class="app-header__nav" aria-label="Site">
