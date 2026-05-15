@@ -1943,6 +1943,31 @@ a.landing-pricing__cta--outline:visited {
   border-bottom-color: color-mix(in srgb, var(--mint-400) 50%, transparent);
 }
 
+.app-footer__bug {
+  margin: 0;
+  text-align: center;
+}
+
+.app-footer__bug-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--mint-400) 88%, var(--text-secondary) 12%);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--mint-400) 38%, transparent);
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.app-footer__bug-link:hover {
+  color: var(--mint-400);
+  border-bottom-color: color-mix(in srgb, var(--mint-400) 58%, transparent);
+}
+
+.app-footer__bug-link:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--mint-400) 85%, transparent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
 .app-footer__legal {
   display: flex;
   flex-wrap: wrap;
