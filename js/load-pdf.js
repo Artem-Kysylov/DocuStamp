@@ -3,9 +3,9 @@ import { appState } from "./state.js";
 import {
   clearDropzoneError,
   clearWorkspaceStatus,
-  showPdfLoadError,
 } from "./messages.js";
-import { isPdfFile, readFileToBytes } from "./file-utils.js";
+import { readFileToBytes } from "./file-utils.js";
+import { showToast } from "./ui-utils.js";
 import {
   applyStampFromPng,
   assignStampRotation,
@@ -22,6 +22,11 @@ import {
 } from "./page-sync.js";
 
 let pdfJsDocument = null;
+
+/** Used to avoid double toast when pdf-lib failure was already surfaced. */
+const PDF_LIB_TOAST_SENT = Symbol("PDF_LIB_TOAST_SENT");
+
+const MAX_FREE_TIER_PDF_BYTES = 50 * 1024 * 1024;
 
 const setDropzoneLoading = (active) => {
   const dz = document.getElementById("dropzone");
@@ -47,21 +52,6 @@ const setWorkspaceChrome = (active) => {
 };
 
 export const setDocWorkspaceActive = setWorkspaceChrome;
-
-const getPageCountWithPdfLib = async (bytes) => {
-  const pdfLib = globalThis.PDFLib;
-  if (!pdfLib?.PDFDocument?.load) {
-    return null;
-  }
-  try {
-    const doc = await pdfLib.PDFDocument.load(bytes, {
-      ignoreEncryption: true,
-    });
-    return doc.getPageCount();
-  } catch {
-    return null;
-  }
-};
 
 const saveStampFractionalPosition = (page, stamp, overlay) => {
   const w = overlay.clientWidth;
@@ -264,13 +254,36 @@ export const loadPdfFromFile = async (file) => {
   clearDropzoneError();
   clearWorkspaceStatus();
 
-  if (!isPdfFile(file)) {
-    showPdfLoadError("Please choose a PDF file.");
+  if (!file) {
+    return;
+  }
+
+  if (file.size > MAX_FREE_TIER_PDF_BYTES) {
+    showToast(
+      "Oops, this PDF is too heavy. Max 50MB for free tier.",
+      "error",
+    );
+    return;
+  }
+
+  const hasExplicitMime =
+    typeof file.type === "string" && file.type.length > 0;
+  const isPdfMime = file.type === "application/pdf";
+  const pdfByName = Boolean(file.name?.toLowerCase().endsWith(".pdf"));
+  if (hasExplicitMime && !isPdfMime) {
+    showToast("Wait, that's not a PDF!", "error");
+    return;
+  }
+  if (!hasExplicitMime && !pdfByName) {
+    showToast("Wait, that's not a PDF!", "error");
     return;
   }
 
   if (!window.pdfjsLib) {
-    showPdfLoadError("Preview library failed to load. Check your connection.");
+    showToast(
+      "Preview library failed to load. Check your connection.",
+      "error",
+    );
     return;
   }
 
@@ -294,10 +307,21 @@ export const loadPdfFromFile = async (file) => {
       docNameEl.textContent = appState.fileName;
     }
 
-    const [pdf, libPageCount] = await Promise.all([
-      pdfjsLib.getDocument({ data: bytesForPreview }).promise,
-      getPageCountWithPdfLib(appState.pdfBytes),
-    ]);
+    const pdfLib = globalThis.PDFLib;
+    let libPageCount = null;
+    if (pdfLib?.PDFDocument?.load) {
+      try {
+        const libDoc = await pdfLib.PDFDocument.load(bytesForPreview, {
+          ignoreEncryption: true,
+        });
+        libPageCount = libDoc.getPageCount();
+      } catch {
+        showToast("This PDF looks broken. Try another one.", "error");
+        throw PDF_LIB_TOAST_SENT;
+      }
+    }
+
+    const pdf = await pdfjsLib.getDocument({ data: bytesForPreview }).promise;
     pdfJsDocument = pdf;
 
     let pageCount = pdf.numPages;
@@ -354,7 +378,9 @@ export const loadPdfFromFile = async (file) => {
     }
   } catch (error) {
     console.error(error);
-    showPdfLoadError("Could not read this PDF. Try another file.");
+    if (error !== PDF_LIB_TOAST_SENT) {
+      showToast("This PDF looks broken. Try another one.", "error");
+    }
     if (downloadBtn) {
       downloadBtn.disabled = true;
     }

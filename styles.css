@@ -1,10 +1,10 @@
 :root {
   --bg-obsidian: #0b0e14;
+  /* Subtle center lift — breaks flat obsidian without brightening the whole page */
   --bg-depth: radial-gradient(
-    120% 80% at 50% 0%,
-    #121826 0%,
-    var(--bg-obsidian) 45%,
-    #07080c 100%
+    circle at center,
+    #16191e 0%,
+    var(--bg-obsidian) 100%
   );
   --surface-glass: rgba(22, 28, 40, 0.55);
   --surface-glass-strong: rgba(28, 35, 52, 0.72);
@@ -101,6 +101,14 @@ body {
   border-radius: var(--radius-lg);
 }
 
+/* Softer, wider mint wash under the header — reads as a spotlight toward the hero */
+.app-header.glass {
+  box-shadow: var(--shadow-soft),
+    0 36px 100px -48px rgb(52 211 153 / 0.16),
+    0 72px 160px -72px rgb(52 211 153 / 0.09),
+    0 120px 220px -100px rgb(52 211 153 / 0.05);
+}
+
 .brand {
   display: flex;
   align-items: center;
@@ -125,7 +133,8 @@ body {
   border-radius: 11px;
   background: var(--mint-gradient);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset,
-    0 8px 24px var(--mint-glow);
+    0 10px 36px var(--mint-glow),
+    0 0 64px rgb(52 211 153 / 0.2);
   flex-shrink: 0;
 }
 
@@ -164,12 +173,34 @@ body {
 }
 
 .hero {
+  position: relative;
+  isolation: isolate;
   margin: 0;
   padding: 0;
   width: 100%;
   max-width: 38rem;
   margin-inline: auto;
   text-align: center;
+}
+
+/* Mint spotlight from above — pairs with header glow; stays non-interactive */
+.hero::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: clamp(-200px, -28vw, -100px);
+  z-index: -1;
+  width: min(36rem, 94vw);
+  height: clamp(260px, 42vw, 400px);
+  translate: -50% 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 100% 52% at 50% 0%,
+    rgb(52 211 153 / 0.12) 0%,
+    rgb(52 211 153 / 0.045) 42%,
+    transparent 70%
+  );
+  filter: blur(32px);
 }
 
 .hero__title {
@@ -271,7 +302,7 @@ body {
   padding: clamp(2.5rem, 6vw, 3.75rem) clamp(1.5rem, 4vw, 2.5rem);
   text-align: center;
   background: rgba(16, 19, 28, 0.65);
-  border: 1px solid var(--border-subtle);
+  border: 1px dashed rgba(255, 255, 255, 0.06);
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
@@ -284,6 +315,7 @@ body {
 .dropzone.is-dragover,
 .dropzone.is-loading,
 .dropzone:hover {
+  border-style: dashed;
   border-color: color-mix(in srgb, var(--mint-400) 45%, transparent);
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.06),
@@ -748,6 +780,159 @@ body.doc-loaded .workspace {
 
 .doc-toast[hidden] {
   display: none !important;
+}
+
+/* ——— App toasts (upload / validation) ——— */
+.toast-container {
+  position: fixed;
+  top: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: min(calc(100vw - 2rem), 26rem);
+  pointer-events: none;
+}
+
+.toast {
+  width: 100%;
+  margin: 0;
+  padding: 0.85rem 1.1rem;
+  font-family: var(--font);
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--text-primary);
+  text-align: center;
+  border-radius: var(--radius-md);
+  background: rgba(20, 20, 25, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.42);
+  opacity: 0;
+  transform: translateY(-1.125rem);
+  transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
+}
+
+.toast--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast--error {
+  border-color: color-mix(in srgb, #ff6b6b 52%, var(--border-subtle));
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.42),
+    0 0 28px rgb(255 107 107 / 0.14);
+}
+
+.toast--success {
+  border-color: color-mix(in srgb, var(--mint-500) 48%, var(--border-subtle));
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.42),
+    0 0 28px var(--mint-glow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    transition-duration: 0.12s;
+  }
+}
+
+/* ——— Cookie consent ——— */
+.cookie-banner {
+  position: fixed;
+  bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+  left: max(1rem, env(safe-area-inset-left, 0px));
+  z-index: 9450;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+  max-width: min(18rem, calc(100vw - 2rem));
+  padding: 1rem 1.15rem;
+  margin: 0;
+  border-radius: var(--radius-md);
+  background: var(--surface-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-soft);
+  opacity: 0;
+  transform: translateY(0.85rem);
+  transition: opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cookie-banner--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cookie-banner--dismissing {
+  opacity: 0;
+  transform: translateY(0.65rem);
+  transition-duration: 0.32s;
+}
+
+.cookie-banner__text {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 450;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.cookie-banner__btn {
+  align-self: flex-start;
+  margin: 0;
+  padding: 0.45rem 0.95rem;
+  font-family: var(--font);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  color: rgba(255, 255, 255, 0.96);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  border: 1px solid color-mix(in srgb, var(--mint-400) 52%, transparent);
+  background: color-mix(in srgb, var(--mint-500) 18%, transparent);
+  box-shadow: 0 0 28px rgb(52 211 153 / 0.18);
+  transition: border-color 0.15s ease, background-color 0.15s ease,
+    box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.cookie-banner__btn:hover {
+  border-color: color-mix(in srgb, var(--mint-400) 68%, transparent);
+  background: color-mix(in srgb, var(--mint-500) 28%, transparent);
+  box-shadow: 0 0 32px var(--mint-glow);
+}
+
+.cookie-banner__btn:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--mint-400) 85%, transparent);
+  outline-offset: 2px;
+}
+
+.cookie-banner__btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .cookie-banner {
+    background: var(--surface-glass-strong);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cookie-banner {
+    transition-duration: 0.14s;
+  }
+
+  .cookie-banner--dismissing {
+    transition-duration: 0.12s;
+  }
 }
 
 .global-drop-overlay {
