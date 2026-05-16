@@ -1,4 +1,8 @@
-import { STAMP_LAYOUT, STAMP_SCALE } from "./constants.js";
+import {
+  STAMP_DEFAULT_PREVIEW_SCALE,
+  STAMP_LAYOUT,
+  STAMP_SCALE,
+} from "./constants.js";
 import { appState } from "./state.js";
 import { maybePropagateStampSync } from "./page-sync.js";
 import { randomStampRotationDeg, renderDefaultSignedPng } from "./signature-image.js";
@@ -253,8 +257,11 @@ export const applyStampFromPng = (
   img.alt = ariaLabel;
   setStampSource(stampEl, source);
 
-  appState.stampScale = 1;
-  stampEl.style.setProperty("--stamp-scale", "1");
+  appState.stampScale = STAMP_DEFAULT_PREVIEW_SCALE;
+  stampEl.style.setProperty(
+    "--stamp-scale",
+    String(STAMP_DEFAULT_PREVIEW_SCALE),
+  );
 
   const onReady = () => {
     applyStampImageSizing(stampEl, overlay);

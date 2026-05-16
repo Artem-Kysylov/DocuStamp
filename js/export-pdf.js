@@ -130,6 +130,7 @@ export const exportStampedPdf = async () => {
     anchor.click();
     anchor.remove();
     URL.revokeObjectURL(objectUrl);
+    document.dispatchEvent(new CustomEvent("docstamp:exported"));
   } catch (error) {
     console.error(error);
     const detail =

@@ -123,6 +123,13 @@
               <p id="dropzone-hint" class="dropzone__hint">
                 or click to browse — stays on your device
               </p>
+              <button
+                type="button"
+                class="dropzone__demo-link"
+                id="btn-instant-demo"
+              >
+                ⚡️ Try Instant Demo (5 seconds)
+              </button>
             </div>
           </div>
           <p class="dropzone-trust">
@@ -138,35 +145,63 @@
           aria-label="PDF preview and export"
           hidden
         >
-          <div class="toolbar" role="toolbar" aria-label="Document actions">
-            <span class="toolbar__label">Document</span>
-            <span id="doc-name" class="toolbar__filename">—</span>
-            <button
-              type="button"
-              id="btn-replace-document"
-              class="toolbar__btn toolbar__btn--replace"
-              aria-label="Replace PDF"
+          <div class="workspace__chrome">
+            <div class="toolbar" role="toolbar" aria-label="Document actions">
+              <span class="toolbar__label">Document</span>
+              <span id="doc-name" class="toolbar__filename">—</span>
+              <button
+                type="button"
+                id="btn-replace-document"
+                class="toolbar__btn toolbar__btn--replace"
+                aria-label="Replace PDF"
+              >
+                Replace
+              </button>
+              <button
+                type="button"
+                id="clear-doc-btn"
+                class="toolbar__btn btn-secondary-muted"
+                aria-label="Clear document and return to upload"
+              >
+                Clear
+              </button>
+              <span class="toolbar__spacer" aria-hidden="true"></span>
+              <button
+                type="button"
+                id="btn-draw-signature"
+                class="toolbar__btn"
+                aria-expanded="false"
+                aria-controls="signature-modal"
+              >
+                Draw signature
+              </button>
+              <button
+                id="btn-download"
+                type="button"
+                class="toolbar__btn toolbar__btn--primary"
+                disabled
+              >
+                Download
+              </button>
+            </div>
+            <div
+              id="demo-post-cta"
+              class="demo-post-cta"
+              role="region"
+              aria-label="Try with your own document"
+              hidden
             >
-              Replace
-            </button>
-            <span class="toolbar__spacer" aria-hidden="true"></span>
-            <button
-              type="button"
-              id="btn-draw-signature"
-              class="toolbar__btn"
-              aria-expanded="false"
-              aria-controls="signature-modal"
-            >
-              Draw signature
-            </button>
-            <button
-              id="btn-download"
-              type="button"
-              class="toolbar__btn toolbar__btn--primary"
-              disabled
-            >
-              Download
-            </button>
+              <p class="demo-post-cta__text">
+                Boom. Now try it with your own PDF.
+              </p>
+              <button
+                type="button"
+                id="demo-post-cta-upload"
+                class="toolbar__btn toolbar__btn--primary demo-post-cta__btn"
+              >
+                Upload your PDF
+              </button>
+            </div>
           </div>
           <p id="workspace-status" class="workspace-status" role="status" hidden></p>
 
@@ -184,6 +219,16 @@
                     class="preview__stamp-layer"
                     aria-hidden="true"
                   ></div>
+                  <p
+                    id="demo-hint-tooltip"
+                    class="demo-hint-tooltip"
+                    role="status"
+                    aria-live="polite"
+                    hidden
+                  >
+                    Absurdly fast, right? Drag it, change to your own signature,
+                    or click Download.
+                  </p>
                 </div>
               </div>
               <div

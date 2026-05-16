@@ -1,3 +1,5 @@
+import { STAMP_DEFAULT_PREVIEW_SCALE } from "./constants.js";
+
 export const appState = {
   pdfBytes: null,
   fileName: "",
@@ -17,5 +19,5 @@ export const appState = {
   /** Preview + PDF rotation (deg); realism: −1.5 or +1 */
   stampRotationDeg: 0,
   /** Visual scale from corner handle */
-  stampScale: 1,
+  stampScale: STAMP_DEFAULT_PREVIEW_SCALE,
 };

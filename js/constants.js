@@ -3,15 +3,18 @@ export const PDFJS_VERSION = "3.11.174";
 export const PDFJS_WORKER_URL = `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/build/pdf.worker.min.js`;
 
 export const PDF_RENDER_SCALE = Object.freeze({
-  maxFit: 2.85,
-  previewWidthFallback: 720,
-  previewHorizontalPadding: 22,
+  maxFit: 3.05,
+  previewWidthFallback: 960,
+  /** Floor preview target width vs viewport when layout width is still stale (cap matches CSS shell). */
+  previewViewportWidthFraction: 0.75,
+  previewTargetWidthCapPx: 1400,
+  previewHorizontalPadding: 16,
   /** Space reserved below preview content (pager strip). */
-  previewVerticalPadding: 18,
+  previewVerticalPadding: 14,
   minPreviewTargetWidth: 240,
   minPreviewTargetHeight: 200,
   /** Matches `.workspace { max-height }` — used when preview has no layout height yet. */
-  workspaceMaxHeightVh: 82,
+  workspaceMaxHeightVh: 85,
 });
 
 export const STAMP_LAYOUT = Object.freeze({
@@ -24,6 +27,9 @@ export const STAMP_SCALE = Object.freeze({
   min: 0.35,
   max: 3,
 });
+
+/** Default stamp UI scale vs PDF preview on load (readable on large previews). */
+export const STAMP_DEFAULT_PREVIEW_SCALE = 0.8;
 
 /** Transparent margin after crop (avoids clipping anti-aliased ink) */
 export const SIGNATURE_CROP_PAD_PX = 2;

@@ -42,7 +42,11 @@ const setDropzoneLoading = (active) => {
 };
 
 const setWorkspaceChrome = (active) => {
-  document.body.classList.toggle("doc-loaded", active);
+  if (active) {
+    document.body.classList.add("doc-loaded");
+  } else {
+    document.body.classList.remove("doc-loaded");
+  }
   document
     .getElementById("app-main")
     ?.classList.toggle("app-main--workspace", active);
@@ -114,18 +118,23 @@ const updatePagerUi = () => {
 
 /** Box for PDF page bitmap (width + height) so the page fits in the viewport without scrolling. */
 const getPreviewFitBox = () => {
+  const canvasWrap = document.getElementById("canvas-wrap");
   const preview = document.getElementById("preview");
   const workspace = document.getElementById("workspace");
   void workspace?.offsetWidth;
 
-  let containerW = preview?.clientWidth ?? 0;
+  let containerW = canvasWrap?.clientWidth ?? 0;
+  if (containerW <= 0) {
+    containerW = preview?.clientWidth ?? 0;
+  }
+
   let containerH = preview?.clientHeight ?? 0;
 
   if (containerW <= 0) {
     if (workspace && !workspace.hidden) {
       containerW = workspace.getBoundingClientRect().width;
       if (containerW > 0) {
-        containerW -= 72;
+        containerW -= 44;
       }
     }
   }
@@ -135,6 +144,17 @@ const getPreviewFitBox = () => {
       PDF_RENDER_SCALE.previewWidthFallback,
       Math.max(320, window.innerWidth - 48),
     );
+  }
+
+  if (typeof window !== "undefined") {
+    const layoutFloor = Math.min(
+      PDF_RENDER_SCALE.previewTargetWidthCapPx,
+      Math.max(
+        320,
+        window.innerWidth * PDF_RENDER_SCALE.previewViewportWidthFraction,
+      ),
+    );
+    containerW = Math.max(containerW, layoutFloor);
   }
 
   if (containerH <= 0 && typeof window !== "undefined") {
@@ -250,7 +270,12 @@ export const disposePdfPreview = async () => {
   updatePagerUi();
 };
 
-export const loadPdfFromFile = async (file) => {
+export const loadPdfFromFile = async (file, options = {}) => {
+  const fromDemo = options.fromDemo === true;
+  if (!fromDemo) {
+    document.dispatchEvent(new CustomEvent("docstamp:user-pdf-load"));
+  }
+
   clearDropzoneError();
   clearWorkspaceStatus();
 
@@ -345,8 +370,13 @@ export const loadPdfFromFile = async (file) => {
     }
     setWorkspaceChrome(true);
     void workspace?.offsetWidth;
+    document.getElementById("app-main")?.offsetWidth;
     await new Promise((resolve) => {
       requestAnimationFrame(() => requestAnimationFrame(resolve));
+    });
+    void document.getElementById("canvas-wrap")?.offsetWidth;
+    await new Promise((resolve) => {
+      queueMicrotask(resolve);
     });
 
     await renderPdfPageToCanvas(1);

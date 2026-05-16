@@ -1,3 +1,4 @@
+import { STAMP_DEFAULT_PREVIEW_SCALE } from "./constants.js";
 import { appState } from "./state.js";
 import { clearDropzoneError, clearWorkspaceStatus } from "./messages.js";
 import {
@@ -11,7 +12,7 @@ export const resetWorkspaceToIntro = async () => {
   appState.fileName = "";
   appState.stampPngBytes = null;
   appState.stampRotationDeg = 0;
-  appState.stampScale = 1;
+  appState.stampScale = STAMP_DEFAULT_PREVIEW_SCALE;
 
   const modal = document.getElementById("signature-modal");
   const drawBtn = document.getElementById("btn-draw-signature");

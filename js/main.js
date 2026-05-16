@@ -9,9 +9,11 @@ import { wireStampPageSyncToggle } from "./page-sync.js";
 
 import { wireSectionReveal } from "./section-reveal.js";
 import { wireCookieConsent } from "./cookie-consent.js";
+import { wireInstantDemo } from "./demo-controller.js";
 
 configurePdfWorker();
 wireDropzone();
+wireInstantDemo();
 wireToolbar();
 wirePdfPager();
 wireStampPageSyncToggle();
