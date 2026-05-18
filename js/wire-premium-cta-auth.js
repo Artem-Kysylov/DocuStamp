@@ -6,14 +6,30 @@ import {
 } from "./auth.js";
 import { showToast } from "./ui-utils.js";
 
-if (typeof Paddle !== "undefined") {
-  Paddle.Initialize({
-    token: "test_53d800b69911a0c5df9abc3db19",
-    environment: "sandbox",
-  });
-} else {
-  console.error("Paddle SDK not loaded");
-}
+const PADDLE_CLIENT_TOKEN = "test_53d800b69911a0c5df9abc3db19";
+
+/**
+ * Runs after the rest of main.js (including section reveal). Never throws — a failing Paddle init must not break the whole app.
+ */
+const initializePaddleSandbox = () => {
+  if (typeof Paddle === "undefined") {
+    console.error("Paddle SDK not loaded");
+    return;
+  }
+  try {
+    const maybePromise = Paddle.Initialize({
+      token: PADDLE_CLIENT_TOKEN,
+      environment: "sandbox",
+    });
+    if (maybePromise != null && typeof maybePromise.then === "function") {
+      void maybePromise.catch((err) => {
+        console.error("Paddle.Initialize failed:", err);
+      });
+    }
+  } catch (err) {
+    console.error("Paddle.Initialize failed:", err);
+  }
+};
 
 const PREMIUM_CTA_SELECTOR = ".landing-pricing__cta--premium";
 const HEADER_NAV_SELECTOR = ".app-header__nav";
@@ -57,6 +73,8 @@ const syncHeaderNav = (user) => {
  * Syncs premium pricing CTA label with Firebase auth, header profile UI, and checkout/login click paths.
  */
 export function wirePremiumCtaAuth() {
+  initializePaddleSandbox();
+
   const cta = document.querySelector(PREMIUM_CTA_SELECTOR);
 
   const syncCtaLabel = (user) => {
