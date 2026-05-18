@@ -6,6 +6,15 @@ import {
 } from "./auth.js";
 import { showToast } from "./ui-utils.js";
 
+if (typeof Paddle !== "undefined") {
+  Paddle.Initialize({
+    token: "test_53d800b69911a0c5df9abc3db19",
+    environment: "sandbox",
+  });
+} else {
+  console.error("Paddle SDK not loaded");
+}
+
 const PREMIUM_CTA_SELECTOR = ".landing-pricing__cta--premium";
 const HEADER_NAV_SELECTOR = ".app-header__nav";
 const DEFAULT_CTA_LABEL = "Get Lifetime Access";
@@ -70,7 +79,27 @@ export function wirePremiumCtaAuth() {
     event.preventDefault();
 
     if (auth.currentUser) {
-      console.log("Redirecting to Paddle for:", auth.currentUser.email);
+      const user = auth.currentUser;
+      if (typeof Paddle === "undefined" || typeof Paddle.Checkout?.open !== "function") {
+        console.error("Paddle SDK not loaded");
+        return;
+      }
+      Paddle.Checkout.open({
+        settings: {
+          displayMode: "overlay",
+          theme: "dark",
+          locale: "en",
+        },
+        items: [
+          {
+            priceId: "pri_01krxw0cgqnstwgajbv61zf4cw",
+            quantity: 1,
+          },
+        ],
+        customer: {
+          email: user.email ?? "",
+        },
+      });
       return;
     }
 
