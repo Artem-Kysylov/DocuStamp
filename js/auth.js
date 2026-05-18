@@ -1,6 +1,12 @@
 // js/auth.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCng-98T0UgPYf8_fb4Mk1nSp1sQeqLoTo",
@@ -14,6 +20,8 @@ const firebaseConfig = {
 // Инициализируем Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+export const db = getFirestore(app);
+export { doc, setDoc, getDoc };
 const provider = new GoogleAuthProvider();
 
 // Функция для логина через окно-попап

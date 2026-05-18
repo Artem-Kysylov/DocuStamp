@@ -350,7 +350,69 @@ body.doc-loaded .app-main,
   line-height: 1;
 }
 
+.fixed-badges-tray {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 2500;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.45rem;
+  max-width: min(calc(100vw - 2rem), 22rem);
+  flex-wrap: wrap;
+}
+
+.fixed-badges-tray .local-processing-badge {
+  position: static;
+  bottom: auto;
+  right: auto;
+}
+
+.badge-pro-lifetime {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 0.4rem 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--mint-400);
+  background: color-mix(in srgb, var(--mint-400) 14%, rgba(22, 27, 34, 0.92));
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid color-mix(in srgb, var(--mint-400) 38%, transparent);
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft);
+  pointer-events: none;
+  user-select: none;
+}
+
+.toolbar__btn.landing-pricing__cta--premium.landing-pricing__cta--disabled,
+.toolbar__btn.landing-pricing__cta--premium.landing-pricing__cta--disabled:hover {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.72;
+  transform: none;
+  box-shadow: none;
+}
+
+.toolbar__btn.landing-pricing__cta--premium.landing-pricing__cta--disabled:focus-visible {
+  outline: none;
+}
+
 @media (max-width: 480px) {
+  .fixed-badges-tray {
+    bottom: 0.65rem;
+    right: 0.65rem;
+  }
+
+  .badge-pro-lifetime {
+    font-size: 0.68rem;
+    padding: 0.35rem 0.55rem;
+  }
+
   .local-processing-badge {
     bottom: 0.65rem;
     right: 0.65rem;
@@ -2388,4 +2450,33 @@ a.landing-pricing__cta--outline:visited {
   .user-profile {
     gap: 0.5rem;
   }
+}
+
+/* ——— Pro Badge ——— */
+.badge-pro-lifetime {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  background: linear-gradient(135deg, #2e1065 0%, #1e1b4b 100%);
+  border: 1px solid #7c3aed;
+  border-radius: 100px;
+  color: #c084fc;
+  font-family: var(--font);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.25);
+  animation: proGlow 3s ease-in-out infinite alternate;
+}
+
+.badge-pro-lifetime::before {
+  content: "💎";
+  font-size: 0.85rem;
+}
+
+@keyframes proGlow {
+  0% { box-shadow: 0 0 8px rgba(124, 58, 237, 0.2); }
+  100% { box-shadow: 0 0 16px rgba(124, 58, 237, 0.45); }
 }

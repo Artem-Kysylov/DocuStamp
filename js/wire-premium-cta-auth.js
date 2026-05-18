@@ -1,8 +1,12 @@
 import {
   auth,
+  db,
+  doc,
+  getDoc,
   loginWithGoogle,
   logout,
   onAuthStateChanged,
+  setDoc,
 } from "./auth.js";
 import { showToast } from "./ui-utils.js";
 
@@ -17,12 +21,17 @@ const initializePaddleSandbox = () => {
     return;
   }
   try {
-    // Sandbox mode: Environment.set must run before Initialize (not passed into Initialize).
     if (typeof Paddle.Environment?.set === "function") {
       Paddle.Environment.set("sandbox");
     }
     const maybePromise = Paddle.Initialize({
       token: PADDLE_CLIENT_TOKEN,
+      eventCallback: async (paddleEvent) => {
+        if (paddleEvent?.name !== "checkout.completed") {
+          return;
+        }
+        await persistProAndReload();
+      },
     });
     if (maybePromise != null && typeof maybePromise.then === "function") {
       void maybePromise.catch((err) => {
@@ -38,8 +47,78 @@ const PREMIUM_CTA_SELECTOR = ".landing-pricing__cta--premium";
 const HEADER_NAV_SELECTOR = ".app-header__nav";
 const DEFAULT_CTA_LABEL = "Get Lifetime Access";
 const LOGGED_IN_CTA_LABEL = "Proceed to Payment 🚀";
+const LOGGED_IN_PRO_LABEL = "Pro Lifetime Activated 💎";
 /** Fallback when Firebase returns no photo URL (SVG placeholder; avoid interpolating URLs into HTML). */
 const DEFAULT_AVATAR_SRC = "./logo/default-avatar.svg";
+
+let checkoutCompletionReloadScheduled = false;
+
+const persistProAndReload = async () => {
+  if (checkoutCompletionReloadScheduled) {
+    return;
+  }
+  const uid = auth.currentUser?.uid;
+  if (!uid) {
+    return;
+  }
+  checkoutCompletionReloadScheduled = true;
+  try {
+    await setDoc(doc(db, "users", uid), { isPro: true }, { merge: true });
+    window.location.reload();
+  } catch (err) {
+    checkoutCompletionReloadScheduled = false;
+    console.error("Failed to save Pro status:", err);
+  }
+};
+
+/**
+ * @param user
+ */
+const fetchUserIsPro = async (user) => {
+  if (!user) {
+    return false;
+  }
+  try {
+    const snap = await getDoc(doc(db, "users", user.uid));
+    return Boolean(snap.exists && snap.data()?.isPro === true);
+  } catch (err) {
+    console.error("Firestore read failed:", err);
+    return false;
+  }
+};
+
+const wrapLocalProcessingBadge = (localBadge) => {
+  const tray = document.createElement("div");
+  tray.className = "fixed-badges-tray";
+  localBadge.parentNode?.insertBefore(tray, localBadge);
+  tray.appendChild(localBadge);
+  return tray;
+};
+
+/**
+ * @param {boolean} isPro
+ */
+const syncProBadge = (isPro) => {
+  const localBadge = document.querySelector(".local-processing-badge");
+  if (!localBadge) {
+    return;
+  }
+
+  const tray =
+    localBadge.closest(".fixed-badges-tray") ?? wrapLocalProcessingBadge(localBadge);
+
+  let proEl = tray.querySelector(".badge-pro-lifetime");
+  if (isPro) {
+    if (!proEl) {
+      proEl = document.createElement("span");
+      proEl.className = "badge-pro-lifetime";
+      proEl.textContent = "Pro Lifetime";
+      tray.insertBefore(proEl, localBadge);
+    }
+    return;
+  }
+  proEl?.remove();
+};
 
 const bindSignOutButton = () => {
   document.getElementById("btn-signout")?.addEventListener("click", () => {
@@ -47,6 +126,9 @@ const bindSignOutButton = () => {
   });
 };
 
+/**
+ * @param user
+ */
 const syncHeaderNav = (user) => {
   const headerNav = document.querySelector(HEADER_NAV_SELECTOR);
   if (!headerNav) {
@@ -73,23 +155,51 @@ const syncHeaderNav = (user) => {
 };
 
 /**
- * Syncs premium pricing CTA label with Firebase auth, header profile UI, and checkout/login click paths.
+ * Syncs premium pricing CTA label with Firebase auth, header profile UI, checkout/login click paths, and Pro UI from Firestore.
  */
 export function wirePremiumCtaAuth() {
   initializePaddleSandbox();
 
   const cta = document.querySelector(PREMIUM_CTA_SELECTOR);
+  /** @type {boolean} */
+  let latestIsPro = false;
 
-  const syncCtaLabel = (user) => {
+  /**
+   * @param user
+   * @param {boolean} isPro
+   */
+  const syncPremiumCta = (user, isPro) => {
     if (!cta) {
       return;
     }
-    cta.textContent = user ? LOGGED_IN_CTA_LABEL : DEFAULT_CTA_LABEL;
+    if (!user) {
+      cta.textContent = DEFAULT_CTA_LABEL;
+      cta.classList.remove("landing-pricing__cta--disabled");
+      cta.removeAttribute("aria-disabled");
+      cta.removeAttribute("tabindex");
+      return;
+    }
+    if (isPro) {
+      cta.textContent = LOGGED_IN_PRO_LABEL;
+      cta.classList.add("landing-pricing__cta--disabled");
+      cta.setAttribute("aria-disabled", "true");
+      cta.setAttribute("tabindex", "-1");
+      return;
+    }
+    cta.textContent = LOGGED_IN_CTA_LABEL;
+    cta.classList.remove("landing-pricing__cta--disabled");
+    cta.removeAttribute("aria-disabled");
+    cta.removeAttribute("tabindex");
   };
 
-  onAuthStateChanged(auth, (user) => {
-    syncCtaLabel(user);
+  onAuthStateChanged(auth, async (user) => {
     syncHeaderNav(user);
+
+    const isPro = user ? await fetchUserIsPro(user) : false;
+    latestIsPro = isPro;
+
+    syncPremiumCta(user, isPro);
+    syncProBadge(isPro);
   });
 
   if (!cta) {
@@ -98,6 +208,10 @@ export function wirePremiumCtaAuth() {
 
   cta.addEventListener("click", async (event) => {
     event.preventDefault();
+
+    if (latestIsPro) {
+      return;
+    }
 
     if (auth.currentUser) {
       const user = auth.currentUser;
@@ -110,6 +224,12 @@ export function wirePremiumCtaAuth() {
           displayMode: "overlay",
           theme: "dark",
           locale: "en",
+          eventCallback: async (paddleEvent) => {
+            if (paddleEvent?.name !== "checkout.completed") {
+              return;
+            }
+            await persistProAndReload();
+          },
         },
         items: [
           {
@@ -126,7 +246,6 @@ export function wirePremiumCtaAuth() {
 
     try {
       const user = await loginWithGoogle();
-      syncCtaLabel(user);
       const email = user.email ?? "there";
       showToast(`Welcome, ${email}`, "success");
     } catch {
