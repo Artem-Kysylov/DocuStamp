@@ -699,6 +699,24 @@ body:has(#workspace:not([hidden])) .dropzone-trust {
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+.toolbar__download-cluster {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.28rem;
+  max-width: min(100%, 15rem);
+  flex-shrink: 0;
+}
+
+.toolbar__export-note {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.35;
+  padding: 0 0.2rem;
+}
+
 .toolbar__spacer {
   flex: 1 1 1.5rem;
   min-width: 0.5rem;
@@ -1504,6 +1522,113 @@ body.doc-loaded #workspace,
   flex-wrap: wrap;
   gap: 0.5rem;
   justify-content: flex-end;
+  align-items: center;
+}
+
+.signature-modal__apply-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem 1rem;
+  width: 100%;
+}
+
+@media (min-width: 520px) {
+  .signature-modal__apply-wrap {
+    width: auto;
+    margin-left: auto;
+  }
+}
+
+.signature-modal__save-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+.signature-modal__save-label--disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.signature-modal__save-label input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--mint-400);
+  cursor: inherit;
+}
+
+.saved-signatures-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.saved-signatures__title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.65rem;
+}
+
+.saved-signatures__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.saved-signatures__grid--locked {
+  pointer-events: none;
+  opacity: 0.42;
+  filter: grayscale(0.35);
+}
+
+.saved-signatures-promo {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.signature-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 2 / 1;
+  padding: 0.35rem;
+  margin: 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(12, 16, 24, 0.85);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.signature-slot:hover {
+  border-color: color-mix(in srgb, var(--mint-400) 45%, transparent);
+  background: rgba(16, 22, 32, 0.92);
+}
+
+.signature-slot:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--mint-400) 85%, transparent);
+  outline-offset: 2px;
+}
+
+.signature-slot img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  pointer-events: none;
 }
 
 .signature-modal__close {
@@ -2479,4 +2604,196 @@ a.landing-pricing__cta--outline:visited {
 @keyframes proGlow {
   0% { box-shadow: 0 0 8px rgba(124, 58, 237, 0.2); }
   100% { box-shadow: 0 0 16px rgba(124, 58, 237, 0.45); }
+}
+
+/* ——— Premium Paywall Modal ——— */
+.paywall-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 10, 12, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  pointer-events: none;
+}
+
+.paywall-overlay--active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.paywall-card {
+  background: #16161a;
+  border: 1px solid #2a2a32;
+  border-radius: 20px;
+  padding: 2.5rem;
+  max-width: 480px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transform: translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.paywall-overlay--active .paywall-card {
+  transform: translateY(0);
+}
+
+.paywall-card__icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+  animation: pulseGem 2s infinite alternate;
+}
+
+.paywall-card__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+  font-family: var(--font);
+}
+
+.paywall-card__text {
+  font-size: 0.95rem;
+  color: #9a9a86;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.paywall-card__features {
+  text-align: left;
+  background: #1c1c22;
+  border: 1px solid #2e2e38;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+  list-style: none;
+}
+
+.paywall-card__feature-item {
+  font-size: 0.9rem;
+  color: #e2e2e9;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.paywall-card__feature-item:last-child {
+  margin-bottom: 0;
+}
+
+.paywall-card__cta {
+  width: 100%;
+  margin: 0;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.paywall-card__btn-close {
+  background: none;
+  border: none;
+  color: #62626a;
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-top: 1.25rem;
+  transition: color 0.15s ease;
+  text-decoration: underline;
+}
+
+.paywall-card__btn-close:hover {
+  color: #9a9a86;
+}
+
+/* Метка оставшихся лимитов возле кнопки скачивания */
+.export-limit-notice {
+  font-size: 0.8rem;
+  color: #62626a;
+  margin-top: 0.5rem;
+  text-align: center;
+  display: block;
+}
+
+@keyframes pulseGem {
+  0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(124,58,237,0.3)); }
+  100% { transform: scale(1.1); filter: drop-shadow(0 0 15px rgba(124,58,237,0.7)); }
+}
+
+/* ——— Saved Signatures Panel ——— */
+.saved-signatures-section {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #2a2a32;
+  text-align: left;
+}
+
+.saved-signatures__title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #9a9a86;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+
+.saved-signatures__grid {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.signature-slot {
+  width: 100px;
+  height: 60px;
+  background: #1c1c22;
+  border: 1px solid #2e2e38;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 4px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.signature-slot:hover {
+  border-color: #7c3aed;
+  background: #22222a;
+  transform: translateY(-2px);
+}
+
+.signature-slot img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: invert(1); /* Если подпись черная на прозрачном, инвертируем для темной темы */
+}
+
+/* Состояние блокировки для бесплатных юзеров */
+.saved-signatures__grid--locked .signature-slot {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.saved-signatures-promo {
+  font-size: 0.8rem;
+  color: #62626a;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
 }

@@ -1,4 +1,5 @@
 import { STAMP_DEFAULT_PREVIEW_SCALE } from "./constants.js";
+import { updateToolbarExportNote } from "./export-note.js";
 import { appState } from "./state.js";
 import { clearDropzoneError, clearWorkspaceStatus } from "./messages.js";
 import {
@@ -56,6 +57,7 @@ export const resetWorkspaceToIntro = async () => {
   const downloadBtn = document.getElementById("btn-download");
   if (downloadBtn) {
     downloadBtn.disabled = true;
+    updateToolbarExportNote();
   }
 
   clearDropzoneError();

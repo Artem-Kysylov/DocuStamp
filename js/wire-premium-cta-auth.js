@@ -6,42 +6,11 @@ import {
   loginWithGoogle,
   logout,
   onAuthStateChanged,
-  setDoc,
 } from "./auth.js";
+import { updateToolbarExportNote } from "./export-note.js";
+import { initializePaddleSandbox, openLifetimeCheckout } from "./paddle-docstamp.js";
+import { getLatestIsPro, setLatestIsPro } from "./pro-status.js";
 import { showToast } from "./ui-utils.js";
-
-const PADDLE_CLIENT_TOKEN = "test_53d800b69911a0c5df9abc3db19";
-
-/**
- * Runs after the rest of main.js (including section reveal). Never throws — a failing Paddle init must not break the whole app.
- */
-const initializePaddleSandbox = () => {
-  if (typeof Paddle === "undefined") {
-    console.error("Paddle SDK not loaded");
-    return;
-  }
-  try {
-    if (typeof Paddle.Environment?.set === "function") {
-      Paddle.Environment.set("sandbox");
-    }
-    const maybePromise = Paddle.Initialize({
-      token: PADDLE_CLIENT_TOKEN,
-      eventCallback: async (paddleEvent) => {
-        if (paddleEvent?.name !== "checkout.completed") {
-          return;
-        }
-        await persistProAndReload();
-      },
-    });
-    if (maybePromise != null && typeof maybePromise.then === "function") {
-      void maybePromise.catch((err) => {
-        console.error("Paddle.Initialize failed:", err);
-      });
-    }
-  } catch (err) {
-    console.error("Paddle.Initialize failed:", err);
-  }
-};
 
 const PREMIUM_CTA_SELECTOR = ".landing-pricing__cta--premium";
 const HEADER_NAV_SELECTOR = ".app-header__nav";
@@ -50,26 +19,6 @@ const LOGGED_IN_CTA_LABEL = "Proceed to Payment 🚀";
 const LOGGED_IN_PRO_LABEL = "Pro Lifetime Activated 💎";
 /** Fallback when Firebase returns no photo URL (SVG placeholder; avoid interpolating URLs into HTML). */
 const DEFAULT_AVATAR_SRC = "./logo/default-avatar.svg";
-
-let checkoutCompletionReloadScheduled = false;
-
-const persistProAndReload = async () => {
-  if (checkoutCompletionReloadScheduled) {
-    return;
-  }
-  const uid = auth.currentUser?.uid;
-  if (!uid) {
-    return;
-  }
-  checkoutCompletionReloadScheduled = true;
-  try {
-    await setDoc(doc(db, "users", uid), { isPro: true }, { merge: true });
-    window.location.reload();
-  } catch (err) {
-    checkoutCompletionReloadScheduled = false;
-    console.error("Failed to save Pro status:", err);
-  }
-};
 
 /**
  * @param user
@@ -161,8 +110,6 @@ export function wirePremiumCtaAuth() {
   initializePaddleSandbox();
 
   const cta = document.querySelector(PREMIUM_CTA_SELECTOR);
-  /** @type {boolean} */
-  let latestIsPro = false;
 
   /**
    * @param user
@@ -196,10 +143,11 @@ export function wirePremiumCtaAuth() {
     syncHeaderNav(user);
 
     const isPro = user ? await fetchUserIsPro(user) : false;
-    latestIsPro = isPro;
+    setLatestIsPro(isPro);
 
     syncPremiumCta(user, isPro);
     syncProBadge(isPro);
+    updateToolbarExportNote();
   });
 
   if (!cta) {
@@ -209,38 +157,12 @@ export function wirePremiumCtaAuth() {
   cta.addEventListener("click", async (event) => {
     event.preventDefault();
 
-    if (latestIsPro) {
+    if (getLatestIsPro()) {
       return;
     }
 
     if (auth.currentUser) {
-      const user = auth.currentUser;
-      if (typeof Paddle === "undefined" || typeof Paddle.Checkout?.open !== "function") {
-        console.error("Paddle SDK not loaded");
-        return;
-      }
-      Paddle.Checkout.open({
-        settings: {
-          displayMode: "overlay",
-          theme: "dark",
-          locale: "en",
-          eventCallback: async (paddleEvent) => {
-            if (paddleEvent?.name !== "checkout.completed") {
-              return;
-            }
-            await persistProAndReload();
-          },
-        },
-        items: [
-          {
-            priceId: "pri_01krxw0cgqnstwgajbv61zf4cw",
-            quantity: 1,
-          },
-        ],
-        customer: {
-          email: user.email ?? "",
-        },
-      });
+      openLifetimeCheckout();
       return;
     }
 

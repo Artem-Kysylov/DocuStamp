@@ -1,3 +1,10 @@
+import {
+  auth,
+  addDoc,
+  collection,
+  db,
+  getDocs,
+} from "./auth.js";
 import { SIGNATURE_PAD, SIGNATURE_PAD_PREVIEW } from "./constants.js";
 import {
   applyStampFromPng,
@@ -8,8 +15,12 @@ import {
 import {
   randomStampRotationDeg,
   padCanvasToInkTrimmedPng,
+  dataUrlToPngBytes,
 } from "./signature-image.js";
 import { showWorkspaceStatus } from "./messages.js";
+import { getLatestIsPro, subscribeProStatus } from "./pro-status.js";
+
+const MAX_SAVED_SIGNATURES_SHOWN = 18;
 
 const setupPadResolution = (pad) => {
   const ctx = pad.getContext("2d");
@@ -77,6 +88,10 @@ export const wireSignatureModal = () => {
   const cancelBtn = document.getElementById("signature-modal-cancel");
   const clearBtn = document.getElementById("signature-modal-clear");
   const applyBtn = document.getElementById("signature-modal-apply");
+  const chkSave = document.getElementById("chk-save-signature");
+  const saveLabel = document.getElementById("save-sig-label");
+  const savedGrid = document.getElementById("saved-signatures-container");
+  const proNote = document.getElementById("pro-signature-note");
 
   if (
     !modal ||
@@ -85,7 +100,10 @@ export const wireSignatureModal = () => {
     !closeBtn ||
     !cancelBtn ||
     !clearBtn ||
-    !applyBtn
+    !applyBtn ||
+    !chkSave ||
+    !savedGrid ||
+    !proNote
   ) {
     return;
   }
@@ -93,18 +111,120 @@ export const wireSignatureModal = () => {
   let drawing = false;
   let last = { x: 0, y: 0 };
 
-  const openModal = () => {
-    modal.hidden = false;
-    setupPadResolution(pad);
-    clearPad(pad);
-    openBtn.setAttribute("aria-expanded", "true");
-    pad.focus({ preventScroll: true });
-  };
-
   const closeModal = () => {
     modal.hidden = true;
     openBtn.setAttribute("aria-expanded", "false");
     openBtn.focus({ preventScroll: true });
+  };
+
+  const syncSavedSignaturesUi = async () => {
+    const isPro = getLatestIsPro();
+
+    if (!isPro) {
+      chkSave.disabled = true;
+      chkSave.checked = false;
+      saveLabel?.classList.add("signature-modal__save-label--disabled");
+      savedGrid.classList.add("saved-signatures__grid--locked");
+      savedGrid.replaceChildren();
+      proNote.innerHTML =
+        "<span>🔒 Upgrade to Pro to save signatures for 1-click access</span>";
+      return;
+    }
+
+    chkSave.disabled = false;
+    saveLabel?.classList.remove("signature-modal__save-label--disabled");
+    savedGrid.classList.remove("saved-signatures__grid--locked");
+    proNote.innerHTML = "";
+
+    const uid = auth.currentUser?.uid;
+    if (!uid) {
+      savedGrid.replaceChildren();
+      return;
+    }
+
+    try {
+      const snap = await getDocs(collection(db, "users", uid, "signatures"));
+      const rows = snap.docs.map((d) => ({
+        id: d.id,
+        dataUrl: d.data()?.dataUrl,
+        createdAt: typeof d.data()?.createdAt === "number" ? d.data().createdAt : 0,
+      }));
+      rows.sort((a, b) => b.createdAt - a.createdAt);
+      savedGrid.replaceChildren();
+
+      for (const row of rows.slice(0, MAX_SAVED_SIGNATURES_SHOWN)) {
+        if (typeof row.dataUrl !== "string" || !row.dataUrl.startsWith("data:")) {
+          continue;
+        }
+        const slot = document.createElement("button");
+        slot.type = "button";
+        slot.className = "signature-slot";
+        slot.setAttribute("aria-label", "Use saved signature");
+        const img = document.createElement("img");
+        img.src = row.dataUrl;
+        img.alt = "Saved signature";
+        img.draggable = false;
+        slot.appendChild(img);
+        savedGrid.appendChild(slot);
+      }
+    } catch (err) {
+      console.error("Failed to load saved signatures:", err);
+      showWorkspaceStatus("Could not load saved signatures.");
+    }
+  };
+
+  subscribeProStatus(() => {
+    void syncSavedSignaturesUi();
+  });
+
+  const applySavedSignatureToWorkspace = async (dataUrl) => {
+    const overlay = document.getElementById("stamp-overlay");
+    if (!overlay) {
+      closeModal();
+      return;
+    }
+    const bytes = await dataUrlToPngBytes(dataUrl);
+    const stamp = ensureStamp(overlay);
+    assignStampRotation(stamp, randomStampRotationDeg());
+    applyStampFromPng(stamp, overlay, dataUrl, bytes, "Saved signature", {
+      source: "custom",
+    });
+    const img = stamp.querySelector(".stamp__img");
+    if (img?.decode) {
+      try {
+        await img.decode();
+      } catch {
+        /* ignore */
+      }
+    }
+    scheduleDefaultStampPlacement(stamp, overlay);
+    closeModal();
+  };
+
+  savedGrid.addEventListener("click", (event) => {
+    if (savedGrid.classList.contains("saved-signatures__grid--locked")) {
+      return;
+    }
+    const slot = event.target.closest(".signature-slot");
+    if (!slot) {
+      return;
+    }
+    const img = slot.querySelector("img");
+    const src = img?.src;
+    if (!src || !src.startsWith("data:")) {
+      return;
+    }
+    void applySavedSignatureToWorkspace(src);
+  });
+
+  const openModal = () => {
+    modal.hidden = false;
+    setupPadResolution(pad);
+    clearPad(pad);
+    chkSave.checked = false;
+    openBtn.setAttribute("aria-expanded", "true");
+    pad.focus({ preventScroll: true });
+    void syncSavedSignaturesUi();
   };
 
   openBtn.addEventListener("click", () => {
@@ -135,6 +255,24 @@ export const wireSignatureModal = () => {
         return;
       }
       const { dataUrl, bytes } = await padCanvasToInkTrimmedPng(pad);
+
+      if (
+        getLatestIsPro() &&
+        auth.currentUser?.uid &&
+        chkSave.checked
+      ) {
+        try {
+          await addDoc(collection(db, "users", auth.currentUser.uid, "signatures"), {
+            dataUrl,
+            createdAt: Date.now(),
+          });
+          await syncSavedSignaturesUi();
+        } catch (err) {
+          console.error("Failed to save signature:", err);
+          showWorkspaceStatus("Could not save signature to profile.");
+        }
+      }
+
       const stamp = ensureStamp(overlay);
       assignStampRotation(stamp, randomStampRotationDeg());
       applyStampFromPng(stamp, overlay, dataUrl, bytes, "Drawn signature", {

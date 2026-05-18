@@ -11,10 +11,12 @@ import { wireSectionReveal } from "./section-reveal.js";
 import { wireCookieConsent } from "./cookie-consent.js";
 import { wireInstantDemo } from "./demo-controller.js";
 import { wirePremiumCtaAuth } from "./wire-premium-cta-auth.js";
+import { wirePaywallModal } from "./paywall-modal.js";
 
 configurePdfWorker();
 wireDropzone();
 wireInstantDemo();
+wirePremiumCtaAuth();
 wireToolbar();
 wirePdfPager();
 wireStampPageSyncToggle();
@@ -22,4 +24,4 @@ wireGlobalReplaceDrop();
 wireSignatureModal();
 wireSectionReveal();
 wireCookieConsent();
-wirePremiumCtaAuth();
+wirePaywallModal();

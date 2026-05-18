@@ -6,6 +6,7 @@ import {
 } from "./messages.js";
 import { readFileToBytes } from "./file-utils.js";
 import { showToast } from "./ui-utils.js";
+import { updateToolbarExportNote } from "./export-note.js";
 import {
   applyStampFromPng,
   assignStampRotation,
@@ -351,6 +352,7 @@ export const loadPdfFromFile = async (file, options = {}) => {
   const downloadBtn = document.getElementById("btn-download");
   if (downloadBtn) {
     downloadBtn.disabled = true;
+    updateToolbarExportNote();
   }
 
   try {
@@ -441,6 +443,7 @@ export const loadPdfFromFile = async (file, options = {}) => {
 
     if (downloadBtn) {
       downloadBtn.disabled = false;
+      updateToolbarExportNote();
     }
   } catch (error) {
     console.error(error);
@@ -449,8 +452,8 @@ export const loadPdfFromFile = async (file, options = {}) => {
     }
     if (downloadBtn) {
       downloadBtn.disabled = true;
+      updateToolbarExportNote();
     }
-    appState.pdfBytes = null;
     appState.fileName = "";
     const docNameEl = document.getElementById("doc-name");
     if (docNameEl) {

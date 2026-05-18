@@ -1,4 +1,8 @@
 import { exportStampedPdf } from "./export-pdf.js";
+import { updateToolbarExportNote } from "./export-note.js";
+import { consumeFreeExportSlot, getRemainingFreeExportsToday } from "./free-export-quota.js";
+import { openPaywallModal } from "./paywall-modal.js";
+import { getLatestIsPro } from "./pro-status.js";
 import { resetWorkspaceToIntro } from "./reset-workspace.js";
 
 const USER_PDF_LOAD = "docstamp:user-pdf-load";
@@ -25,6 +29,21 @@ export const wireToolbar = () => {
   const downloadBtn = document.getElementById("btn-download");
   if (downloadBtn) {
     downloadBtn.addEventListener("click", () => {
+      if (getLatestIsPro()) {
+        void exportStampedPdf();
+        updateToolbarExportNote();
+        return;
+      }
+
+      const remaining = getRemainingFreeExportsToday();
+      if (remaining <= 0) {
+        openPaywallModal();
+        updateToolbarExportNote();
+        return;
+      }
+
+      consumeFreeExportSlot();
+      updateToolbarExportNote();
       void exportStampedPdf();
     });
   }

@@ -177,14 +177,22 @@
               >
                 Draw signature
               </button>
-              <button
-                id="btn-download"
-                type="button"
-                class="toolbar__btn toolbar__btn--primary"
-                disabled
-              >
-                Download
-              </button>
+              <div class="toolbar__download-cluster">
+                <button
+                  id="btn-download"
+                  type="button"
+                  class="toolbar__btn toolbar__btn--primary"
+                  disabled
+                >
+                  Download
+                </button>
+                <span
+                  id="toolbar-export-note"
+                  class="toolbar__export-note"
+                  hidden
+                  aria-live="polite"
+                ></span>
+              </div>
             </div>
             <div
               id="demo-post-cta"
@@ -680,13 +688,24 @@
           <button type="button" id="signature-modal-cancel" class="toolbar__btn">
             Cancel
           </button>
-          <button
-            type="button"
-            id="signature-modal-apply"
-            class="toolbar__btn toolbar__btn--primary"
-          >
-            Use signature
-          </button>
+          <div class="signature-modal__apply-wrap">
+            <button
+              type="button"
+              id="signature-modal-apply"
+              class="toolbar__btn toolbar__btn--primary"
+            >
+              Use signature
+            </button>
+            <label id="save-sig-label" class="signature-modal__save-label">
+              <input type="checkbox" id="chk-save-signature" />
+              Save to my profile
+            </label>
+          </div>
+        </div>
+        <div class="saved-signatures-section">
+          <div class="saved-signatures__title">Your Saved Signatures</div>
+          <div id="saved-signatures-container" class="saved-signatures__grid"></div>
+          <div id="pro-signature-note" class="saved-signatures-promo"></div>
         </div>
       </div>
     </div>
@@ -709,6 +728,33 @@
       <span class="local-processing-badge__icon" aria-hidden="true">🔒</span>
       <span aria-hidden="true">Local Processing</span>
     </p>
+
+    <div id="paywall-modal" class="paywall-overlay" aria-hidden="true">
+      <div class="paywall-card glass" role="dialog" aria-modal="true" aria-labelledby="paywall-modal-title">
+        <span class="paywall-card__icon" aria-hidden="true">💎</span>
+        <h3 id="paywall-modal-title" class="paywall-card__title">Daily Free Limit Reached</h3>
+        <p class="paywall-card__text">
+          Ваш документ готов к скачиванию! 🚀 Но вы израсходовали 2 бесплатных экспорта на сегодня.
+          Поддержите независимую инди-разработку и забудьте о лимитах навсегда.
+        </p>
+        <ul class="paywall-card__features">
+          <li class="paywall-card__feature-item">✨ Безлимитное скачивание документов</li>
+          <li class="paywall-card__feature-item">💾 Сохранение подписей и штампов в профиле</li>
+          <li class="paywall-card__feature-item">🚀 Более быстрая локальная обработка</li>
+          <li class="paywall-card__feature-item">🤝 Поддержка будущих обновлений</li>
+        </ul>
+        <button
+          type="button"
+          id="paywall-cta-btn"
+          class="toolbar__btn toolbar__btn--primary landing-pricing__cta landing-pricing__cta--premium paywall-card__cta"
+        >
+          Unlock Lifetime Access — $12
+        </button>
+        <button type="button" id="paywall-close-btn" class="paywall-card__btn-close">
+          Close and edit document
+        </button>
+      </div>
+    </div>
 
     <script type="application/ld+json">
       {
