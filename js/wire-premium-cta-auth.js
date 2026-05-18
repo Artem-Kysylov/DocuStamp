@@ -17,9 +17,12 @@ const initializePaddleSandbox = () => {
     return;
   }
   try {
+    // Sandbox mode: Environment.set must run before Initialize (not passed into Initialize).
+    if (typeof Paddle.Environment?.set === "function") {
+      Paddle.Environment.set("sandbox");
+    }
     const maybePromise = Paddle.Initialize({
       token: PADDLE_CLIENT_TOKEN,
-      environment: "sandbox",
     });
     if (maybePromise != null && typeof maybePromise.then === "function") {
       void maybePromise.catch((err) => {
