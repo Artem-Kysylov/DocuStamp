@@ -13,10 +13,6 @@ let postCtaShown = false;
 
 const exitDemoChrome = () => {
   document.getElementById("btn-download")?.classList.remove("toolbar__btn--demo-pulse");
-  const tip = document.getElementById("demo-hint-tooltip");
-  if (tip) {
-    tip.hidden = true;
-  }
 };
 
 const hidePostCta = () => {
@@ -63,10 +59,6 @@ const runDemoStampEntrance = () => {
 };
 
 const startDemoChrome = () => {
-  const tip = document.getElementById("demo-hint-tooltip");
-  if (tip) {
-    tip.hidden = false;
-  }
   document.getElementById("btn-download")?.classList.add("toolbar__btn--demo-pulse");
 };
 

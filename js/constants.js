@@ -5,12 +5,19 @@ export const PDFJS_WORKER_URL = `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/b
 export const PDF_RENDER_SCALE = Object.freeze({
   maxFit: 3.05,
   previewWidthFallback: 960,
-  /** Floor preview target width vs viewport when layout width is still stale (cap matches CSS shell). */
+  /** Viewport at/under this width: measure preview DOM for fit (avoids tiny first paint on mobile). */
+  previewDesktopBreakpointPx: 1024,
+  /** Desktop: width target = min(cap, viewport * fraction); cap matches CSS preview column. */
+  previewDesktopViewportWidthFraction: 0.48,
+  /** Non-desktop: floor width when layout is still narrow after class toggles. */
   previewViewportWidthFraction: 0.75,
-  previewTargetWidthCapPx: 1400,
+  previewTargetWidthCapPx: 740,
   previewHorizontalPadding: 16,
   /** Space reserved below preview content (pager strip). */
   previewVerticalPadding: 14,
+  /** Desktop: fit box height ceiling (Math.min with viewport * fraction). */
+  previewDesktopMaxHeightPx: 840,
+  previewDesktopViewportHeightFraction: 0.78,
   minPreviewTargetWidth: 240,
   minPreviewTargetHeight: 200,
   /** Matches `.workspace { max-height }` — used when preview has no layout height yet. */

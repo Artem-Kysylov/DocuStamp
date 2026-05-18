@@ -123,54 +123,84 @@ const getPreviewFitBox = () => {
   const workspace = document.getElementById("workspace");
   void workspace?.offsetWidth;
 
-  let containerW = canvasWrap?.clientWidth ?? 0;
-  if (containerW <= 0) {
-    containerW = preview?.clientWidth ?? 0;
-  }
+  const isDesktop =
+    typeof window !== "undefined" &&
+    window.innerWidth > PDF_RENDER_SCALE.previewDesktopBreakpointPx;
 
-  let containerH = preview?.clientHeight ?? 0;
+  let maxW;
 
-  if (containerW <= 0) {
-    if (workspace && !workspace.hidden) {
-      containerW = workspace.getBoundingClientRect().width;
-      if (containerW > 0) {
-        containerW -= 44;
+  if (isDesktop) {
+    const targetW = Math.min(
+      PDF_RENDER_SCALE.previewTargetWidthCapPx,
+      window.innerWidth * PDF_RENDER_SCALE.previewDesktopViewportWidthFraction,
+    );
+    maxW = Math.max(
+      PDF_RENDER_SCALE.minPreviewTargetWidth,
+      targetW - PDF_RENDER_SCALE.previewHorizontalPadding,
+    );
+  } else {
+    let containerW = canvasWrap?.clientWidth ?? 0;
+    if (containerW <= 0) {
+      containerW = preview?.clientWidth ?? 0;
+    }
+
+    if (containerW <= 0) {
+      if (workspace && !workspace.hidden) {
+        containerW = workspace.getBoundingClientRect().width;
+        if (containerW > 0) {
+          containerW -= 44;
+        }
       }
     }
-  }
 
-  if (containerW <= 0 && typeof window !== "undefined") {
-    containerW = Math.min(
-      PDF_RENDER_SCALE.previewWidthFallback,
-      Math.max(320, window.innerWidth - 48),
+    if (containerW <= 0 && typeof window !== "undefined") {
+      containerW = Math.min(
+        PDF_RENDER_SCALE.previewWidthFallback,
+        Math.max(320, window.innerWidth - 48),
+      );
+    }
+
+    if (typeof window !== "undefined") {
+      const layoutFloor = Math.min(
+        PDF_RENDER_SCALE.previewTargetWidthCapPx,
+        Math.max(
+          320,
+          window.innerWidth * PDF_RENDER_SCALE.previewViewportWidthFraction,
+        ),
+      );
+      containerW = Math.max(containerW, layoutFloor);
+    }
+
+    maxW = Math.max(
+      PDF_RENDER_SCALE.minPreviewTargetWidth,
+      containerW - PDF_RENDER_SCALE.previewHorizontalPadding,
     );
   }
 
-  if (typeof window !== "undefined") {
-    const layoutFloor = Math.min(
-      PDF_RENDER_SCALE.previewTargetWidthCapPx,
-      Math.max(
-        320,
-        window.innerWidth * PDF_RENDER_SCALE.previewViewportWidthFraction,
-      ),
+  let maxH;
+  if (isDesktop) {
+    const rawH = Math.min(
+      PDF_RENDER_SCALE.previewDesktopMaxHeightPx,
+      window.innerHeight * PDF_RENDER_SCALE.previewDesktopViewportHeightFraction,
     );
-    containerW = Math.max(containerW, layoutFloor);
-  }
+    maxH = Math.max(
+      PDF_RENDER_SCALE.minPreviewTargetHeight,
+      rawH - PDF_RENDER_SCALE.previewVerticalPadding,
+    );
+  } else {
+    let containerH = preview?.clientHeight ?? 0;
 
-  if (containerH <= 0 && typeof window !== "undefined") {
-    const vhCap =
-      (PDF_RENDER_SCALE.workspaceMaxHeightVh / 100) * window.innerHeight;
-    containerH = Math.max(240, vhCap - 120);
-  }
+    if (containerH <= 0 && typeof window !== "undefined") {
+      const vhCap =
+        (PDF_RENDER_SCALE.workspaceMaxHeightVh / 100) * window.innerHeight;
+      containerH = Math.max(240, vhCap - 120);
+    }
 
-  const maxW = Math.max(
-    PDF_RENDER_SCALE.minPreviewTargetWidth,
-    containerW - PDF_RENDER_SCALE.previewHorizontalPadding,
-  );
-  const maxH = Math.max(
-    PDF_RENDER_SCALE.minPreviewTargetHeight,
-    containerH - PDF_RENDER_SCALE.previewVerticalPadding,
-  );
+    maxH = Math.max(
+      PDF_RENDER_SCALE.minPreviewTargetHeight,
+      containerH - PDF_RENDER_SCALE.previewVerticalPadding,
+    );
+  }
 
   return { maxW, maxH };
 };
@@ -204,6 +234,12 @@ const renderPdfPageToCanvas = async (pageNumber) => {
   canvas.height = viewport.height;
 
   await page.render({ canvasContext: context, viewport }).promise;
+
+  const pageFrame = document.querySelector(".preview__page-frame");
+  const overlay = document.getElementById("stamp-overlay");
+  void canvas.offsetWidth;
+  void overlay?.offsetWidth;
+  void pageFrame?.offsetWidth;
 };
 
 const goToRelativePage = async (delta) => {
