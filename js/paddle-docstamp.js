@@ -1,7 +1,7 @@
 import { auth, db, doc, setDoc } from "./auth.js";
 
-export const PADDLE_CLIENT_TOKEN = "test_53d800b69911a0c5df9abc3db19";
-export const PADDLE_PRICE_ID = "pri_01krxw0cgqnstwgajbv61zf4cw";
+export const PADDLE_CLIENT_TOKEN = "live_4c337f8e6823fd7753ff3a0ddce";
+export const PADDLE_PRICE_ID = "pri_01ks048m7nd7wg7a3y8beq6pbq";
 
 let checkoutCompletionReloadScheduled = false;
 
@@ -23,15 +23,12 @@ export const persistProAndReload = async () => {
   }
 };
 
-export const initializePaddleSandbox = () => {
+export const initializePaddle = () => {
   if (typeof Paddle === "undefined") {
     console.error("Paddle SDK not loaded");
     return;
   }
   try {
-    if (typeof Paddle.Environment?.set === "function") {
-      Paddle.Environment.set("sandbox");
-    }
     const maybePromise = Paddle.Initialize({
       token: PADDLE_CLIENT_TOKEN,
       eventCallback: async (paddleEvent) => {

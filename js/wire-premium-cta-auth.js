@@ -8,7 +8,7 @@ import {
   onAuthStateChanged,
 } from "./auth.js";
 import { updateToolbarExportNote } from "./export-note.js";
-import { initializePaddleSandbox, openLifetimeCheckout } from "./paddle-docstamp.js";
+import { initializePaddle, openLifetimeCheckout } from "./paddle-docstamp.js";
 import { getLatestIsPro, setLatestIsPro } from "./pro-status.js";
 import { showToast } from "./ui-utils.js";
 
@@ -107,7 +107,7 @@ const syncHeaderNav = (user) => {
  * Syncs premium pricing CTA label with Firebase auth, header profile UI, checkout/login click paths, and Pro UI from Firestore.
  */
 export function wirePremiumCtaAuth() {
-  initializePaddleSandbox();
+  initializePaddle();
 
   const cta = document.querySelector(PREMIUM_CTA_SELECTOR);
 
