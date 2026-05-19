@@ -3,6 +3,12 @@ import { auth, db, doc, setDoc } from "./auth.js";
 export const PADDLE_CLIENT_TOKEN = "live_4c337f8e6823fd7753ff3a0ddce";
 export const PADDLE_PRICE_ID = "pri_01ks048m7nd7wg7a3y8beq6pbq";
 
+export const PADDLE_CHECKOUT_SETTINGS = {
+  displayMode: "overlay",
+  theme: "dark",
+  locale: "en",
+};
+
 let checkoutCompletionReloadScheduled = false;
 
 export const persistProAndReload = async () => {
@@ -31,6 +37,9 @@ export const initializePaddle = () => {
   try {
     const maybePromise = Paddle.Initialize({
       token: PADDLE_CLIENT_TOKEN,
+      checkout: {
+        settings: PADDLE_CHECKOUT_SETTINGS,
+      },
       eventCallback: async (paddleEvent) => {
         if (paddleEvent?.name !== "checkout.completed") {
           return;
@@ -59,11 +68,7 @@ export const openLifetimeCheckout = () => {
     return;
   }
   Paddle.Checkout.open({
-    settings: {
-      displayMode: "overlay",
-      theme: "dark",
-      locale: "en",
-    },
+    settings: PADDLE_CHECKOUT_SETTINGS,
     items: [{ priceId: PADDLE_PRICE_ID, quantity: 1 }],
     customer: {
       email: user.email ?? "",
