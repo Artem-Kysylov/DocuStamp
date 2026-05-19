@@ -2530,6 +2530,119 @@ a.landing-pricing__cta--outline:visited {
   border-radius: 2px;
 }
 
+/* Cookbook pages */
+.cookbook-content {
+  flex: 1;
+  width: 100%;
+  max-width: 680px;
+  margin-inline: auto;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
+}
+
+.cookbook-content__back {
+  display: inline-block;
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--mint-400);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.cookbook-content__back:hover {
+  color: var(--mint-500);
+  border-bottom-color: color-mix(in srgb, var(--mint-400) 45%, transparent);
+}
+
+.cookbook-content__back:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--mint-400) 85%, transparent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+.cookbook-content h1 {
+  margin: 0 0 1.5rem;
+  font-size: clamp(1.75rem, 4.5vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+.cookbook-content__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin-bottom: 2rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.cookbook-content p {
+  margin: 0 0 1.5rem;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.cookbook-content strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.cookbook-content code {
+  font-size: 0.92em;
+  color: var(--text-primary);
+}
+
+.cookbook-cta-box {
+  margin-top: 3rem;
+  padding: 2rem;
+  text-align: center;
+  background: var(--surface-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.cookbook-cta-box h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.cookbook-cta-box p {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+}
+
+.cookbook-cta-btn {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.8rem 1.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-sm);
+  background: var(--mint-gradient);
+  color: #04120c;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 20px var(--mint-glow);
+  transition: transform 0.1s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cookbook-cta-btn:hover {
+  transform: translateY(-1px);
+  background: var(--mint-gradient-hover);
+  box-shadow: 0 5px 26px var(--mint-glow-hover);
+}
+
+.cookbook-cta-btn:focus-visible {
+  outline: 2px solid var(--mint-400);
+  outline-offset: 3px;
+}
+
 /* ——— Header User Profile ——— */
 .user-profile {
   display: flex;
@@ -2790,4 +2903,118 @@ a.landing-pricing__cta--outline:visited {
   align-items: center;
   gap: 0.35rem;
   margin-top: 0.5rem;
+}
+
+/* ——— Feature Wishlist & Cookbook Hub Section ——— */
+.roadmap-section {
+  margin: 5rem auto 2rem auto;
+  max-width: 960px;
+  padding: 0 1.5rem;
+  display: flex;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.roadmap-column {
+  flex: 1;
+  min-width: 280px;
+}
+
+.roadmap-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  font-family: var(--font);
+}
+
+.seo-links-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.seo-links-list li {
+  margin-bottom: 1rem;
+}
+
+.seo-links-list a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--text-primary) 35%, transparent);
+  text-underline-offset: 3px;
+  font-size: 0.95rem;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+.seo-links-list a:hover {
+  color: var(--mint-400);
+  text-decoration-color: color-mix(in srgb, var(--mint-400) 55%, transparent);
+}
+
+.seo-links-list a:focus-visible {
+  outline: 2px solid var(--mint-400);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.wishlist-card {
+  background: var(--surface-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.wishlist-card__info {
+  text-align: left;
+}
+
+.wishlist-card__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.2rem;
+}
+
+.wishlist-card__desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.wishlist-btn-vote {
+  background: color-mix(in srgb, var(--surface-glass-strong) 88%, transparent);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 50px;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+
+.wishlist-btn-vote:hover {
+  border-color: color-mix(in srgb, var(--mint-400) 45%, var(--border-subtle));
+  color: var(--text-primary);
+}
+
+.wishlist-btn-vote:focus-visible {
+  outline: 2px solid var(--mint-400);
+  outline-offset: 2px;
+}
+
+.wishlist-btn-vote--voted {
+  background: color-mix(in srgb, var(--mint-500) 12%, transparent);
+  border-color: color-mix(in srgb, var(--mint-400) 55%, var(--border-subtle));
+  color: var(--mint-400);
 }

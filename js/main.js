@@ -12,6 +12,7 @@ import { wireCookieConsent } from "./cookie-consent.js";
 import { wireInstantDemo } from "./demo-controller.js";
 import { wirePremiumCtaAuth } from "./wire-premium-cta-auth.js";
 import { wirePaywallModal } from "./paywall-modal.js";
+import { wireWishlist } from "./wishlist.js";
 
 configurePdfWorker();
 wireDropzone();
@@ -25,3 +26,4 @@ wireSignatureModal();
 wireSectionReveal();
 wireCookieConsent();
 wirePaywallModal();
+wireWishlist();

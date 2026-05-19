@@ -6,6 +6,9 @@ import {
   doc,
   setDoc,
   getDoc,
+  updateDoc,
+  increment,
+  onSnapshot,
   collection,
   addDoc,
   getDocs,
@@ -24,7 +27,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-export { doc, setDoc, getDoc, collection, addDoc, getDocs };
+export {
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc,
+  increment,
+  onSnapshot,
+  collection,
+  addDoc,
+  getDocs,
+};
 const provider = new GoogleAuthProvider();
 
 // Функция для логина через окно-попап
