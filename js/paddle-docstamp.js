@@ -5,7 +5,7 @@ export const PADDLE_PRICE_ID = "pri_01ks048m7nd7wg7a3y8beq6pbq";
 
 export const PADDLE_CHECKOUT_SETTINGS = {
   displayMode: "overlay",
-  theme: "dark",
+  theme: "light",
   locale: "en",
 };
 
