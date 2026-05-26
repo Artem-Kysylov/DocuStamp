@@ -170,6 +170,16 @@ export function wirePremiumCtaAuth() {
       const user = await loginWithGoogle();
       const email = user.email ?? "there";
       showToast(`Welcome, ${email}`, "success");
+
+      const isPro = await fetchUserIsPro(user);
+      setLatestIsPro(isPro);
+      syncPremiumCta(user, isPro);
+      syncProBadge(isPro);
+      updateToolbarExportNote();
+
+      if (!isPro) {
+        openLifetimeCheckout();
+      }
     } catch {
       // Popup cancelled or auth error — label remains default via listener
     }
