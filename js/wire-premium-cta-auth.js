@@ -75,15 +75,41 @@ const bindSignOutButton = () => {
   });
 };
 
+const handleSignIn = async () => {
+  try {
+    const user = await loginWithGoogle();
+    const email = user.email ?? "there";
+    showToast(`Welcome, ${email}`, "success");
+
+    const isPro = await fetchUserIsPro(user);
+    setLatestIsPro(isPro);
+    syncProBadge(isPro);
+    updateToolbarExportNote();
+  } catch {
+    // Popup cancelled or auth error
+  }
+};
+
 const bindSignInButton = () => {
-  document.getElementById("btn-signin")?.addEventListener("click", async () => {
-    try {
-      const user = await loginWithGoogle();
-      const email = user.email ?? "there";
-      showToast(`Welcome, ${email}`, "success");
-    } catch {
-      // Popup cancelled or auth error
-    }
+  document.getElementById("btn-signin")?.addEventListener("click", () => {
+    void handleSignIn();
+  });
+};
+
+const bindPricingSignInLinks = () => {
+  document.querySelectorAll(".pricing-signin-link").forEach((link) => {
+    link.addEventListener("click", () => {
+      void handleSignIn();
+    });
+  });
+};
+
+/**
+ * @param user
+ */
+const syncPricingSignInLinks = (user) => {
+  document.querySelectorAll(".landing-pricing__signin-wrap").forEach((wrap) => {
+    wrap.hidden = Boolean(user);
   });
 };
 
@@ -125,6 +151,7 @@ const syncHeaderNav = (user) => {
 export function wirePremiumCtaAuth() {
   initializePaddle();
   bindSignInButton();
+  bindPricingSignInLinks();
 
   const cta = document.querySelector(PREMIUM_CTA_SELECTOR);
 
@@ -158,6 +185,7 @@ export function wirePremiumCtaAuth() {
 
   onAuthStateChanged(auth, async (user) => {
     syncHeaderNav(user);
+    syncPricingSignInLinks(user);
 
     const isPro = user ? await fetchUserIsPro(user) : false;
     setLatestIsPro(isPro);
