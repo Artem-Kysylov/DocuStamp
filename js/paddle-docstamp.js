@@ -1,7 +1,12 @@
 import { auth, db, doc, setDoc } from "./auth.js";
 
 export const PADDLE_CLIENT_TOKEN = "live_4c337f8e6823fd7753ff3a0ddce";
-export const PADDLE_PRICE_ID = "pri_01ks048m7nd7wg7a3y8beq6pbq";
+
+// Новые Price ID для боевых тарифов
+export const PADDLE_PRICE_IDS = {
+  YEARLY: "pri_01ktv9x8ba3qd0fy0fe1nvwdx6",   // $19 - 1 Year Pass
+  LIFETIME: "pri_01ktv9wepg8z8mz8myz328gprz"  // $29 - Pro Lifetime Access
+};
 
 export const PADDLE_CHECKOUT_SETTINGS = {
   displayMode: "overlay",
@@ -57,7 +62,7 @@ export const initializePaddle = () => {
   }
 };
 
-export const openLifetimeCheckout = () => {
+export const openCheckoutWithPriceId = (priceId) => {
   const user = auth.currentUser;
   if (!user) {
     console.error("DocStamp: login required before Paddle checkout");
@@ -67,11 +72,20 @@ export const openLifetimeCheckout = () => {
     console.error("Paddle SDK not loaded");
     return;
   }
+  
   Paddle.Checkout.open({
     settings: PADDLE_CHECKOUT_SETTINGS,
-    items: [{ priceId: PADDLE_PRICE_ID, quantity: 1 }],
+    items: [{ priceId, quantity: 1 }],
     customer: {
       email: user.email ?? "",
     },
+    customData: {
+      firebaseUid: user.uid  // Передается в webhook как event.data.custom_data.firebaseUid
+    }
   });
+};
+
+// Обратная совместимость - используем Lifetime по умолчанию
+export const openLifetimeCheckout = () => {
+  openCheckoutWithPriceId(PADDLE_PRICE_IDS.LIFETIME);
 };

@@ -109,6 +109,9 @@
         </a>
         <nav class="app-header__nav" aria-label="Site">
           <a class="app-header__link" href="#pricing">Pricing</a>
+          <button type="button" id="btn-signin" class="app-header__signin">
+            Sign in
+          </button>
         </nav>
       </header>
 
@@ -474,98 +477,111 @@
           aria-labelledby="landing-pricing-heading"
         >
           <h2 id="landing-pricing-heading" class="landing-pricing__heading">
-            Simple, transparent pricing
+            Choose Your Plan
           </h2>
-          <div class="landing-pricing__grid">
+          <div class="landing-pricing__grid landing-pricing__grid--decoy">
+            <!-- Decoy Plan - 1 Year -->
             <article
-              class="landing-pricing__plan landing-pricing__plan--free"
-              aria-label="Free plan"
+              class="landing-pricing__plan landing-pricing__plan--yearly"
+              aria-label="1-Year plan"
             >
-              <h3 class="landing-pricing__plan-title">Free</h3>
+              <h3 class="landing-pricing__plan-title">1-Year Pass</h3>
               <div class="landing-pricing__price-block">
                 <p class="landing-pricing__price">
-                  <span class="landing-pricing__amount" aria-label="0 dollars"
-                    >$0</span
+                  <span class="landing-pricing__amount" aria-label="19 dollars"
+                    >$19</span
                   >
                 </p>
+                <p class="landing-pricing__sub">For 12 months</p>
               </div>
-              <ul
-                class="landing-pricing__features landing-pricing__features--muted"
-                role="list"
-              >
+              <ul class="landing-pricing__features" role="list">
                 <li class="landing-pricing__feature">
                   <span class="landing-pricing__check" aria-hidden="true"
                     >✓</span
                   >
-                  <span>3 exports per day</span>
+                  <span>Unlimited PDF exports for 12 months</span>
                 </li>
                 <li class="landing-pricing__feature">
                   <span class="landing-pricing__check" aria-hidden="true"
                     >✓</span
                   >
-                  <span>Basic stamp placement</span>
+                  <span>Multi-page sync</span>
                 </li>
                 <li class="landing-pricing__feature">
                   <span class="landing-pricing__check" aria-hidden="true"
                     >✓</span
                   >
-                  <span>Local processing</span>
+                  <span>Basic updates</span>
+                </li>
+                <li class="landing-pricing__feature">
+                  <span class="landing-pricing__check" aria-hidden="true"
+                    >✓</span
+                  >
+                  <span>100% Local privacy</span>
                 </li>
               </ul>
-              <a
-                href="#intro-section"
-                class="toolbar__btn landing-pricing__cta landing-pricing__cta--outline"
+              <button
+                type="button"
+                class="toolbar__btn landing-pricing__cta landing-pricing__cta--yearly checkout-btn"
+                data-price-id="pri_01ktv9x8ba3qd0fy0fe1nvwdx6"
               >
-                Start for free
-              </a>
+                Get 1-Year Access
+              </button>
             </article>
+            
+            <!-- Premium Plan - Lifetime -->
             <div class="landing-pricing__premium-wrap">
+              <div class="landing-pricing__badge">Most Popular</div>
               <div class="landing-pricing__glow" aria-hidden="true"></div>
               <article
                 class="landing-pricing__plan landing-pricing__plan--lifetime glass"
                 aria-label="Lifetime plan"
               >
-                <h3 class="landing-pricing__plan-title">Lifetime Access</h3>
+                <h3 class="landing-pricing__plan-title">Pro Lifetime Access</h3>
                 <div class="landing-pricing__price-block">
-                  <p class="landing-pricing__price">
-                    <span class="landing-pricing__amount" aria-label="12 dollars"
-                      >$12</span
-                    >
-                  </p>
-                  <p class="landing-pricing__sub">One-time payment</p>
+                  <div class="landing-pricing__price-comparison">
+                    <span class="landing-pricing__old-price">$39</span>
+                    <span class="landing-pricing__price">
+                      <span class="landing-pricing__amount" aria-label="29 dollars"
+                        >$29</span
+                      >
+                    </span>
+                  </div>
+                  <p class="landing-pricing__sub">One-time payment, forever</p>
                 </div>
                 <ul class="landing-pricing__features" role="list">
                   <li class="landing-pricing__feature">
                     <span class="landing-pricing__check" aria-hidden="true"
                       >✓</span
                     >
-                    <span>Unlimited PDF exports</span>
+                    <span><strong>Unlimited PDF exports forever</strong></span>
                   </li>
                   <li class="landing-pricing__feature">
                     <span class="landing-pricing__check" aria-hidden="true"
                       >✓</span
                     >
-                    <span>Multi-page sync (Apply to all)</span>
+                    <span>Multi-page sync (Apply to all pages)</span>
                   </li>
                   <li class="landing-pricing__feature">
                     <span class="landing-pricing__check" aria-hidden="true"
                       >✓</span
                     >
-                    <span>100% Local privacy</span>
+                    <span><strong>100% Local privacy guarantee</strong></span>
                   </li>
                   <li class="landing-pricing__feature">
                     <span class="landing-pricing__check" aria-hidden="true"
                       >✓</span
                     >
-                    <span>No subscriptions, ever.</span>
+                    <span><strong>All future updates FREE forever</strong></span>
                   </li>
                 </ul>
-                <a
-                  href="#intro-section"
-                  class="toolbar__btn toolbar__btn--primary landing-pricing__cta landing-pricing__cta--premium"
+                <button
+                  type="button"
+                  class="toolbar__btn toolbar__btn--primary landing-pricing__cta landing-pricing__cta--premium checkout-btn"
+                  data-price-id="pri_01ktv9wepg8z8mz8myz328gprz"
                 >
                   Get Lifetime Access
-                </a>
+                </button>
               </article>
             </div>
           </div>
@@ -788,27 +804,19 @@
 
     <div id="paywall-modal" class="paywall-overlay" aria-hidden="true">
       <div class="paywall-card glass" role="dialog" aria-modal="true" aria-labelledby="paywall-modal-title">
-        <span class="paywall-card__icon" aria-hidden="true">💎</span>
-        <h3 id="paywall-modal-title" class="paywall-card__title">Daily Free Limit Reached</h3>
-        <p class="paywall-card__text">
-          Ваш документ готов к скачиванию! 🚀 Но вы израсходовали 2 бесплатных экспорта на сегодня.
-          Поддержите независимую инди-разработку и забудьте о лимитах навсегда.
-        </p>
-        <ul class="paywall-card__features">
-          <li class="paywall-card__feature-item">✨ Безлимитное скачивание документов</li>
-          <li class="paywall-card__feature-item">💾 Сохранение подписей и штампов в профиле</li>
-          <li class="paywall-card__feature-item">🚀 Более быстрая локальная обработка</li>
-          <li class="paywall-card__feature-item">🤝 Поддержка будущих обновлений</li>
-        </ul>
+        
+        <h3 id="paywall-modal-title" class="paywall-card__title">Pro Feature</h3>
+        <p class="paywall-card__description">To download your signed and verified PDF, please unlock a premium access plan. Your file is safe and processed locally on your device.</p>
+        
         <button
           type="button"
-          id="paywall-cta-btn"
-          class="toolbar__btn toolbar__btn--primary landing-pricing__cta landing-pricing__cta--premium paywall-card__cta"
+          id="paywall-pricing-btn"
+          class="paywall-card__cta"
         >
-          Unlock Lifetime Access — $12
+          View Pricing Plans
         </button>
         <button type="button" id="paywall-close-btn" class="paywall-card__btn-close">
-          Close and edit document
+          ✕
         </button>
       </div>
     </div>

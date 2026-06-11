@@ -27,16 +27,9 @@ export const wirePaywallModal = () => {
     }
   });
 
-  document.getElementById("paywall-cta-btn")?.addEventListener("click", async () => {
-    if (!auth.currentUser) {
-      try {
-        await loginWithGoogle();
-      } catch {
-        return;
-      }
-    }
+  document.getElementById("paywall-pricing-btn")?.addEventListener("click", () => {
     closePaywallModal();
-    openLifetimeCheckout();
+    document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
   });
 
   document.addEventListener("docstamp:exported", () => {

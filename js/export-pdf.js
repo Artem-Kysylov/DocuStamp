@@ -4,6 +4,9 @@ import {
   showWorkspaceStatus,
 } from "./messages.js";
 import { appState } from "./state.js";
+import { auth } from "./auth.js";
+import { getLatestIsPro } from "./pro-status.js";
+import { openPaywallModal } from "./paywall-modal.js";
 
 const drawStampOnPdfPage = (
   page,
@@ -36,6 +39,12 @@ const drawStampOnPdfPage = (
 
 export const exportStampedPdf = async () => {
   clearWorkspaceStatus();
+
+  // Блокировка для неоплаченных пользователей
+  if (!auth.currentUser || !getLatestIsPro()) {
+    openPaywallModal();
+    return;
+  }
 
   const pdfLib = globalThis.PDFLib;
   if (!appState.pdfBytes || !pdfLib) {

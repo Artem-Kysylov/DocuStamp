@@ -13,11 +13,13 @@ import { wireInstantDemo } from "./demo-controller.js";
 import { wirePremiumCtaAuth } from "./wire-premium-cta-auth.js";
 import { wirePaywallModal } from "./paywall-modal.js";
 import { wireWishlist } from "./wishlist.js";
+import { wirePricingCheckout } from "./pricing-checkout.js";
 
 configurePdfWorker();
 wireDropzone();
 wireInstantDemo();
 wirePremiumCtaAuth();
+wirePricingCheckout();
 wireToolbar();
 wirePdfPager();
 wireStampPageSyncToggle();

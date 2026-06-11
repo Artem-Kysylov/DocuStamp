@@ -75,6 +75,18 @@ const bindSignOutButton = () => {
   });
 };
 
+const bindSignInButton = () => {
+  document.getElementById("btn-signin")?.addEventListener("click", async () => {
+    try {
+      const user = await loginWithGoogle();
+      const email = user.email ?? "there";
+      showToast(`Welcome, ${email}`, "success");
+    } catch {
+      // Popup cancelled or auth error
+    }
+  });
+};
+
 /**
  * @param user
  */
@@ -100,7 +112,11 @@ const syncHeaderNav = (user) => {
     return;
   }
 
-  headerNav.innerHTML = `<a class="app-header__link" href="#pricing">Pricing</a>`;
+  headerNav.innerHTML = `
+    <a class="app-header__link" href="#pricing">Pricing</a>
+    <button type="button" id="btn-signin" class="app-header__signin">Sign in</button>
+  `;
+  bindSignInButton();
 };
 
 /**
@@ -108,6 +124,7 @@ const syncHeaderNav = (user) => {
  */
 export function wirePremiumCtaAuth() {
   initializePaddle();
+  bindSignInButton();
 
   const cta = document.querySelector(PREMIUM_CTA_SELECTOR);
 
